@@ -31,8 +31,8 @@ namespace AIJobMatch.Infrastructure
             #region services
             
             #endregion
-            // Đăng ký auto mapper
-            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //Đăng ký auto mapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             // Đăng ký JWT authentication
             //var jwtSettings = new JwtSettings();
             //configuration.Bind(JwtSettings.SectionName, jwtSettings);
