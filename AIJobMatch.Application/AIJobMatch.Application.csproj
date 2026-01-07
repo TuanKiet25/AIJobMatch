@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AIJobMatch.Infrastructure\AIJobMatch.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIJobMatch.Domain\AIJobMatch.Domain.csproj" />
   </ItemGroup>
 
 </Project>

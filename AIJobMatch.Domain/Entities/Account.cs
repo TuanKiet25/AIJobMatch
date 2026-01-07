@@ -16,5 +16,6 @@ namespace AIJobMatch.Domain.Entities
         public Gender Gender { get; set; }
         public string? PasswordHash { get; set; }
         public Role Role { get; set; }
+        public List<Address>? Addresses { get; set; }
     }
 }

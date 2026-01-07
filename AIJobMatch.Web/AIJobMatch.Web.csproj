@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AIJobMatch.Application\AIJobMatch.Application.csproj" />
+    <ProjectReference Include="..\AIJobMatch.Infrastructure\AIJobMatch.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

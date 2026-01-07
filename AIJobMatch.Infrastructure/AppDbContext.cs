@@ -1,4 +1,5 @@
-﻿using AIJobMatch.Domain.Entities;
+﻿
+using AIJobMatch.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
