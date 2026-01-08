@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using AIJobMatch.Application.ViewModels.Requests;
+using AIJobMatch.Domain.Entities;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
     {
         public MapperConfig()
         {
-            
+            CreateMap<RegisterRequest, Account>().ReverseMap();
         }
     }
 }

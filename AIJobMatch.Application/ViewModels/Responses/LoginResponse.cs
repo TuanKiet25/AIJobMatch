@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AIJobMatch.Infrastructure.Repositories
+namespace AIJobMatch.Application.ViewModels.Responses
 {
-    internal class Class1
+    public class LoginResponse
     {
+        public string? Token { get; set; }
     }
 }
