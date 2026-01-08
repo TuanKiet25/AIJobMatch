@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -6,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AIJobMatch.Application;
+using AIJobMatch.Application.IServices;
+using AIJobMatch.Application.Services;
 
 namespace AIJobMatch.Infrastructure
 {
@@ -25,11 +30,11 @@ namespace AIJobMatch.Infrastructure
 
             // Đăng ký repositiries
             #region Repositories
-            
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             #endregion
             // Đăng ký services
             #region services
-            
+            services.AddScoped<IAuthService, AuthService>();
             #endregion
             //Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -38,25 +43,7 @@ namespace AIJobMatch.Infrastructure
             //configuration.Bind(JwtSettings.SectionName, jwtSettings);
             //services.AddSingleton(jwtSettings); // Dùng AddSingleton vì cài đặt không thay đổi
             // Cấu hình dịch vụ Authentication của .NET Core
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //.AddJwtBearer(options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuer = true,
-            //        ValidateAudience = true,
-            //        ValidateLifetime = true,
-            //        ValidateIssuerSigningKey = true,
-            //        ValidIssuer = jwtSettings.Issuer,
-            //        ValidAudience = jwtSettings.Audience,
-            //        IssuerSigningKey = new SymmetricSecurityKey(
-            //            Encoding.UTF8.GetBytes(jwtSettings.Key))
-            //    };
-            //});
+            
             // Đăng ký MailSettings
             //services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
             // Đăng ký CORS
