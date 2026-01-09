@@ -111,7 +111,7 @@ namespace AIJobMatch.Infrastructure.Migrations
 
                     b.HasIndex("WardCode");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.City", b =>
@@ -125,7 +125,7 @@ namespace AIJobMatch.Infrastructure.Migrations
 
                     b.HasKey("CityCode");
 
-                    b.ToTable("City");
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.District", b =>
@@ -145,7 +145,7 @@ namespace AIJobMatch.Infrastructure.Migrations
 
                     b.HasIndex("CityCode");
 
-                    b.ToTable("District");
+                    b.ToTable("Districts");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Ward", b =>
@@ -165,7 +165,7 @@ namespace AIJobMatch.Infrastructure.Migrations
 
                     b.HasIndex("DistrictCode");
 
-                    b.ToTable("Ward");
+                    b.ToTable("Wards");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Address", b =>
