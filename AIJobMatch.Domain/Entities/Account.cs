@@ -17,5 +17,7 @@ namespace AIJobMatch.Domain.Entities
         public string? PasswordHash { get; set; }
         public Role Role { get; set; }
         public List<Address>? Addresses { get; set; }
+        public Candidate? Candidate { get; set; }
+        public Recruiter? Recruiter { get; set; }
     }
 }

@@ -20,5 +20,6 @@ namespace AIJobMatch.Application.ViewModels.Requests
         public Gender? Gender { get; set; }
         public string? PasswordHash { get; set; }
         public Role Role { get; set; }
+ 
     }
 }

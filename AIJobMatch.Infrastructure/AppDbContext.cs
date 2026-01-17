@@ -20,6 +20,9 @@ namespace AIJobMatch.Infrastructure
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<District> Districts { get; set; }
         public virtual DbSet<Ward> Wards { get; set; }
+        public virtual DbSet<Candidate> Candidates { get; set; }
+        public virtual DbSet<Recruiter> Recruiters { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

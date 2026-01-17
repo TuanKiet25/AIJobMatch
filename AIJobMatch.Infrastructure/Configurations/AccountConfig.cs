@@ -18,6 +18,14 @@ namespace AIJobMatch.Infrastructure.Configurations
                    .WithOne(add => add.Account)
                    .HasForeignKey(add => add.AccountId)
                    .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.Candidate)
+                   .WithOne(c => c.Account)
+                   .HasForeignKey<Candidate>(c => c.AccountId)
+                   .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.Recruiter)
+                     .WithOne(r => r.Account)
+                     .HasForeignKey<Recruiter>(r => r.AccountId)
+                     .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

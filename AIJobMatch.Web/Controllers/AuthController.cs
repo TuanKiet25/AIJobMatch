@@ -1,4 +1,5 @@
 ﻿using AIJobMatch.Application.IServices;
+using AIJobMatch.Application.Services;
 using AIJobMatch.Application.ViewModels.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,15 +12,18 @@ namespace AIJobMatch.Web.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly ITurnstileService _turnstileService;
+        public AuthController(IAuthService authService, ITurnstileService turnstileService)
         {
             _authService = authService;
+            _turnstileService = turnstileService;
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
+            
             var result = await _authService.RegisterAsync(request);
             return Ok(result);
         }
@@ -29,7 +33,12 @@ namespace AIJobMatch.Web.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _authService.LoginAsync(request);
-            if(result == null)
+            var isHuman = await _turnstileService.VerifyTokenAsync(request.CaptchaToken);
+            if (!isHuman)
+            {
+                return BadRequest("Xác thực Robot không hợp lệ hoặc đã hết hạn.");
+            }
+            if (result == null)
             {
                 return Unauthorized();
             }

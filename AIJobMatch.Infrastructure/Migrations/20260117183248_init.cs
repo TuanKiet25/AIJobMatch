@@ -45,6 +45,51 @@ namespace AIJobMatch.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Industry = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Size = table.Column<int>(type: "int", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TaxCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BusinessLicenseUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerificationStatus = table.Column<int>(type: "int", nullable: false),
+                    RejectionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VerifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Candidates",
+                columns: table => new
+                {
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Skill = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Education = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Candidates", x => x.AccountId);
+                    table.ForeignKey(
+                        name: "FK_Candidates_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Districts",
                 columns: table => new
                 {
@@ -60,6 +105,30 @@ namespace AIJobMatch.Infrastructure.Migrations
                         column: x => x.CityCode,
                         principalTable: "Cities",
                         principalColumn: "CityCode",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Recruiters",
+                columns: table => new
+                {
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recruiters", x => x.AccountId);
+                    table.ForeignKey(
+                        name: "FK_Recruiters_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Recruiters_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -152,6 +221,11 @@ namespace AIJobMatch.Infrastructure.Migrations
                 column: "CityCode");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Recruiters_CompanyId",
+                table: "Recruiters",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Wards_DistrictCode",
                 table: "Wards",
                 column: "DistrictCode");
@@ -164,10 +238,19 @@ namespace AIJobMatch.Infrastructure.Migrations
                 name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "Accounts");
+                name: "Candidates");
+
+            migrationBuilder.DropTable(
+                name: "Recruiters");
 
             migrationBuilder.DropTable(
                 name: "Wards");
+
+            migrationBuilder.DropTable(
+                name: "Accounts");
+
+            migrationBuilder.DropTable(
+                name: "Companies");
 
             migrationBuilder.DropTable(
                 name: "Districts");

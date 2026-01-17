@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AIJobMatch.Infrastructure.Configurations
+namespace AIJobMatch.Domain.Enums
 {
-    internal class Class1
+    public enum VerificationStatus
     {
+        Pending,
+        Verified,
+        Rejected    
     }
 }
