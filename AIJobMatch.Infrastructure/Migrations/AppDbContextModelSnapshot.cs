@@ -114,6 +114,22 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.ToTable("Addresses");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Candidate", b =>
+                {
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Education")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Skill")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AccountId");
+
+                    b.ToTable("Candidates");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.City", b =>
                 {
                     b.Property<string>("CityCode")
@@ -126,6 +142,65 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.HasKey("CityCode");
 
                     b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BusinessLicenseUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Industry")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Size")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TaxCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("VerificationStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("VerifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Website")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.District", b =>
@@ -146,6 +221,21 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.HasIndex("CityCode");
 
                     b.ToTable("Districts");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Recruiter", b =>
+                {
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("AccountId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Recruiters");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Ward", b =>
@@ -203,6 +293,17 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Ward");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Candidate", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.Account", "Account")
+                        .WithOne("Candidate")
+                        .HasForeignKey("AIJobMatch.Domain.Entities.Candidate", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.District", b =>
                 {
                     b.HasOne("AIJobMatch.Domain.Entities.City", "City")
@@ -212,6 +313,25 @@ namespace AIJobMatch.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("City");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Recruiter", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.Account", "Account")
+                        .WithOne("Recruiter")
+                        .HasForeignKey("AIJobMatch.Domain.Entities.Recruiter", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AIJobMatch.Domain.Entities.Company", "Company")
+                        .WithMany("Recruiters")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Ward", b =>
@@ -228,6 +348,10 @@ namespace AIJobMatch.Infrastructure.Migrations
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Account", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("Candidate");
+
+                    b.Navigation("Recruiter");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.City", b =>
@@ -235,6 +359,11 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Districts");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Company", b =>
+                {
+                    b.Navigation("Recruiters");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.District", b =>

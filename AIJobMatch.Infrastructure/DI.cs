@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+﻿using AIJobMatch.Application;
+using AIJobMatch.Application.IServices;
+using AIJobMatch.Application.Services;
+using AIJobMatch.Application.ViewModels.Requests;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AIJobMatch.Application;
-using AIJobMatch.Application.IServices;
-using AIJobMatch.Application.Services;
 
 namespace AIJobMatch.Infrastructure
 {
@@ -35,6 +36,7 @@ namespace AIJobMatch.Infrastructure
             // Đăng ký services
             #region services
             services.AddScoped<IAuthService, AuthService>();
+            services.AddHttpClient<ITurnstileService, TurnstileService>();
             #endregion
             //Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

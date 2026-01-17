@@ -14,5 +14,6 @@ namespace AIJobMatch.Application.ViewModels.Requests
 
         [Required]
         public string? PasswordHash { get; set; }
+        public string CaptchaToken { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿using AIJobMatch.Infrastructure;
+﻿using AIJobMatch.Application.IServices;
+using AIJobMatch.Application.Services;
+using AIJobMatch.Application.ViewModels.Requests;
+using AIJobMatch.Infrastructure;
 using AIJobMatch.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +68,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.Configure<TurnstileSettings>(builder.Configuration.GetSection("TurnstileSettings"));
 
 var app = builder.Build();
 
