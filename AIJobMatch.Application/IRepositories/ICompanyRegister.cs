@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AIJobMatch.Application.IRepositories
 {
-    public interface IUserRepository : IGenericRepository<Account>
+    public interface ICompanyRegister : IGenericRepository<Company>
     {
     }
 }
