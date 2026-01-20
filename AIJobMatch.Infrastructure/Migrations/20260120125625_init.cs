@@ -55,7 +55,6 @@ namespace AIJobMatch.Infrastructure.Migrations
                     LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Industry = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Size = table.Column<int>(type: "int", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TaxCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BusinessLicenseUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VerificationStatus = table.Column<int>(type: "int", nullable: false),
@@ -164,7 +163,8 @@ namespace AIJobMatch.Infrastructure.Migrations
                     DistrictName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WardCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     WardName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,6 +181,12 @@ namespace AIJobMatch.Infrastructure.Migrations
                         principalTable: "Cities",
                         principalColumn: "CityCode",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Addresses_Districts_DistrictCode",
                         column: x => x.DistrictCode,
@@ -204,6 +210,11 @@ namespace AIJobMatch.Infrastructure.Migrations
                 name: "IX_Addresses_CityCode",
                 table: "Addresses",
                 column: "CityCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_CompanyId",
+                table: "Addresses",
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_DistrictCode",

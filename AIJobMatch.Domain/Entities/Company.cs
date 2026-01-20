@@ -17,13 +17,12 @@ namespace AIJobMatch.Domain.Entities
         public string? LogoUrl { get; set; }
         public string? Industry { get; set; }
         public int? Size { get; set; }
-        public string? Address { get; set; }
         public string TaxCode { get; set; }
         public string BusinessLicenseUrl { get; set; }
         public VerificationStatus VerificationStatus { get; set; } = VerificationStatus.Pending;
         public string? RejectionReason { get; set; }
         public DateTime VerifiedAt { get; set; }
-
+        public List<Address>? addresses { get; set; }
         public List<Recruiter>? Recruiters { get; set; }
     }
 }
