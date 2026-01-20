@@ -228,7 +228,7 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CompanyId")
+                    b.Property<Guid?>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("AccountId");
@@ -326,8 +326,7 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.HasOne("AIJobMatch.Domain.Entities.Company", "Company")
                         .WithMany("Recruiters")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Account");
 

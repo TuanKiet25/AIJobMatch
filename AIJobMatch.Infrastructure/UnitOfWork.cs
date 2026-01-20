@@ -14,10 +14,20 @@ namespace AIJobMatch.Infrastructure
     {
         public readonly AppDbContext _context;
         public IUserRepository userRepository { get; }
+        public ICompanyRegister companyRegister { get; }
+        public IRecruiterRepository recruiterRepository { get; }
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             userRepository = new UserRepository(_context);
+            companyRegister = new CompanyRepository(_context);
+            recruiterRepository = new RecruiterRepository(_context);
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
         }
     }
 }

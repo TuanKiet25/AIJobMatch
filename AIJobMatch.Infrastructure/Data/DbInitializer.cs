@@ -48,7 +48,7 @@ namespace AIJobMatch.Infrastructure.Data
                 var city = new City
                 {
                     CityCode = pDto.Code,
-                    CityName = pDto.Name 
+                    CityName = pDto.Name
                 };
                 cities.Add(city);
 

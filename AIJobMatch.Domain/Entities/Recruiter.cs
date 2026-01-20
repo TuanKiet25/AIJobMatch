@@ -12,7 +12,7 @@ namespace AIJobMatch.Domain.Entities
         [Key]
         public Guid AccountId { get; set; }
         public Account? Account { get; set; }
-        public Guid CompanyId { get; set; }
+        public Guid? CompanyId { get; set; }
         public Company? Company { get; set; }
     }
 }
