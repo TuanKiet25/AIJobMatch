@@ -62,7 +62,7 @@ namespace AIJobMatch.Infrastructure
                                   });
             });
             //đăng ký HttpContextAccessor
-            //services.AddHttpContextAccessor();
+            services.AddHttpContextAccessor();
             return services;
         }
     }

@@ -71,7 +71,7 @@ namespace AIJobMatch.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("AccountId")
+                    b.Property<Guid?>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CityCode")
@@ -81,6 +81,9 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Property<string>("CityName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DistrictCode")
                         .IsRequired()
@@ -106,6 +109,8 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.HasIndex("AccountId");
 
                     b.HasIndex("CityCode");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("DistrictCode");
 
@@ -149,9 +154,6 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BusinessLicenseUrl")
                         .IsRequired()
@@ -263,14 +265,18 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.HasOne("AIJobMatch.Domain.Entities.Account", "Account")
                         .WithMany("Addresses")
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AIJobMatch.Domain.Entities.City", "City")
                         .WithMany("Addresses")
                         .HasForeignKey("CityCode")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("AIJobMatch.Domain.Entities.Company", "Company")
+                        .WithMany("addresses")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AIJobMatch.Domain.Entities.District", "District")
                         .WithMany("Addresses")
@@ -287,6 +293,8 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("City");
+
+                    b.Navigation("Company");
 
                     b.Navigation("District");
 
@@ -363,6 +371,8 @@ namespace AIJobMatch.Infrastructure.Migrations
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Company", b =>
                 {
                     b.Navigation("Recruiters");
+
+                    b.Navigation("addresses");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.District", b =>

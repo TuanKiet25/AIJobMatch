@@ -24,7 +24,11 @@ namespace AIJobMatch.Web.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var result = await _authService.RegisterAsync(request);
-            return Ok(result);
+            if(!result)
+            {
+                return BadRequest("Đăng ký không thành công.");
+            }
+            return Ok("Đăng ký thành công.");
         }
 
         [AllowAnonymous]
@@ -46,9 +50,9 @@ namespace AIJobMatch.Web.Controllers
 
         [AllowAnonymous]
         [HttpPost("company-register")]
-        public async Task<IActionResult> CompanyRegister([FromBody] CompanyRegisterRequest request, Guid userId)
+        public async Task<IActionResult> CompanyRegister([FromBody] CompanyRegisterRequest request)
         {
-            var result = await _authService.CompanyRegisterAsync(request, userId);
+            var result = await _authService.CompanyRegisterAsync(request);
             return Ok(result);
         }
     }

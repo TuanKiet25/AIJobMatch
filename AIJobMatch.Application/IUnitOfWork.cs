@@ -12,6 +12,11 @@ namespace AIJobMatch.Application
         IUserRepository userRepository { get; }
         ICompanyRegister companyRegister { get; }
         IRecruiterRepository recruiterRepository { get; }
+        ICityRepository cityRepository { get; }
+        IDistrictRepository districtRepository { get; }
+        IWardRepository wardRepository { get; }
+        IAddressRepository addressRepository { get; }
+        ICandidateRepository candidateRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }

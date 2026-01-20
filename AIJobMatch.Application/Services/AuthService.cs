@@ -13,6 +13,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
+using Microsoft.AspNetCore.Http;
+using AIJobMatch.Domain.Enums;
 
 namespace AIJobMatch.Application.Services
 {
@@ -21,24 +23,49 @@ namespace AIJobMatch.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public AuthService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AuthService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<CompanyRegisterResponse> CompanyRegisterAsync(CompanyRegisterRequest request, Guid userId)
+        public async Task<CompanyRegisterResponse> CompanyRegisterAsync(CompanyRegisterRequest request)
         {
             try
             {
-                if(request == null) throw new Exception("Null request");
+                var userId = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value);
+                if (request == null) throw new Exception("Null request");
                 if(await _unitOfWork.companyRegister.GetAsync(n => n.TaxCode == request.TaxCode) != null)
                 {
                     throw new Exception("Tax Code already exists.");
                 }
 
                 var companyEntity = _mapper.Map<Company>(request);
+                var city = await _unitOfWork.cityRepository.GetAsync(c => c.CityCode == request.Address.CityCode);
+                var district = await _unitOfWork.districtRepository.GetAsync(c => c.DistrictCode == request.Address.DistrictCode);
+                var ward = await _unitOfWork.wardRepository.GetAsync(c => c.WardCode == request.Address.WardCode);
+                if(city == null || district == null || ward == null)
+                {
+                    throw new Exception("Invalid address codes.");
+                }
+                var addressEntity = new Address
+                {
+                    Street = request.Address.Street,
+                    CityCode = city.CityCode,
+                    CityName = city.CityName,
+                    City = city,
+                    DistrictCode = district.DistrictCode,
+                    DistrictName = district.DistrictName,
+                    District = district,
+                    WardCode = ward.WardCode,
+                    WardName = ward.WardName,
+                    Ward = ward,
+                    CompanyId = companyEntity.Id
+                };
                 var companyResponse = _mapper.Map<CompanyRegisterResponse>(companyEntity);
 
                 var recruiter = await _unitOfWork.recruiterRepository.GetAsync(r => r.AccountId == userId);
@@ -49,6 +76,7 @@ namespace AIJobMatch.Application.Services
                 recruiter.CompanyId = companyResponse.Id;
 
                 await _unitOfWork.recruiterRepository.UpdateAsync(recruiter);
+                await _unitOfWork.addressRepository.AddAsync(addressEntity);
                 await _unitOfWork.companyRegister.AddAsync(companyEntity);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -88,8 +116,8 @@ namespace AIJobMatch.Application.Services
                     Subject = new ClaimsIdentity(new[]
                     {
                         new Claim("Id", account.Id.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Sub, account.FullName),
-                        new Claim(JwtRegisteredClaimNames.Sub, account.Email),
+                        new Claim(JwtRegisteredClaimNames.Name, account.FullName),
+                        new Claim(JwtRegisteredClaimNames.Email, account.Email),
                         new Claim(ClaimTypes.Role, account.Role.ToString()),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 
@@ -120,7 +148,7 @@ namespace AIJobMatch.Application.Services
             }
         }
 
-        public async Task<string> RegisterAsync(RegisterRequest request)
+        public async Task<bool>RegisterAsync(RegisterRequest request)
         {
             try
             {
@@ -128,22 +156,30 @@ namespace AIJobMatch.Application.Services
                 var existingAccount = await _unitOfWork.userRepository.GetAsync(u => (u.Email == request.Email || u.PhoneNumber == request.PhoneNumber) && !u.isDeleted);
                 if (existingAccount != null)
                 {
-                    return "Account with given email or phone number already exists.";
+                    return false;
                 }
-
                 var account = _mapper.Map<Account>(request);
                 account.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
-                
-                var recruiter = new Recruiter
+                if(request.Role == Role.recruiter)
                 {
-                    AccountId = account.Id
-                };
-                await _unitOfWork.recruiterRepository.AddAsync(recruiter);
-
-                await _unitOfWork.userRepository.AddAsync(account);
+                    var recruiter = new Recruiter
+                    {
+                        AccountId = account.Id
+                    };
+                    await _unitOfWork.recruiterRepository.AddAsync(recruiter);
+                }
+                else if(request.Role == Role.Candidate)
+                {
+                    var candidate = new Candidate
+                    {
+                        AccountId = account.Id
+                    };
+                    await _unitOfWork.candidateRepository.AddAsync(candidate);
+                }
+                    await _unitOfWork.userRepository.AddAsync(account);
                 await _unitOfWork.SaveChangesAsync();
 
-                return "Registration successful.";
+                return true;
             }
             catch (Exception ex)
             {

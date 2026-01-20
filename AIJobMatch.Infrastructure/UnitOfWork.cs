@@ -16,6 +16,11 @@ namespace AIJobMatch.Infrastructure
         public IUserRepository userRepository { get; }
         public ICompanyRegister companyRegister { get; }
         public IRecruiterRepository recruiterRepository { get; }
+        public ICityRepository cityRepository { get; }
+        public IDistrictRepository districtRepository { get; }
+        public IWardRepository wardRepository { get; }
+        public IAddressRepository addressRepository { get; }
+        public ICandidateRepository candidateRepository { get; }
 
         public UnitOfWork(AppDbContext context)
         {
@@ -23,6 +28,11 @@ namespace AIJobMatch.Infrastructure
             userRepository = new UserRepository(_context);
             companyRegister = new CompanyRepository(_context);
             recruiterRepository = new RecruiterRepository(_context);
+            cityRepository = new CityRepository(_context);
+            districtRepository = new DistrictRepository(_context);
+            wardRepository = new WardRepository(_context);
+            addressRepository = new AddressRepository(_context);
+            candidateRepository = new CandidateRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()
