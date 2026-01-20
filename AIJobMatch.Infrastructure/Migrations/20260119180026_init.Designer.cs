@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIJobMatch.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260120032219_init")]
+    [Migration("20260119180026_init")]
     partial class init
     {
         /// <inheritdoc />
