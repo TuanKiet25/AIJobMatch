@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace AIJobMatch.Application.Services
 {
@@ -26,6 +27,39 @@ namespace AIJobMatch.Application.Services
             _mapper = mapper;
             _configuration = configuration;
         }
+
+        public async Task<CompanyRegisterResponse> CompanyRegisterAsync(CompanyRegisterRequest request, Guid userId)
+        {
+            try
+            {
+                if(request == null) throw new Exception("Null request");
+                if(await _unitOfWork.companyRegister.GetAsync(n => n.TaxCode == request.TaxCode) != null)
+                {
+                    throw new Exception("Tax Code already exists.");
+                }
+
+                var companyEntity = _mapper.Map<Company>(request);
+                var companyResponse = _mapper.Map<CompanyRegisterResponse>(companyEntity);
+
+                var recruiter = await _unitOfWork.recruiterRepository.GetAsync(r => r.AccountId == userId);
+                if(recruiter == null)
+                {
+                    throw new Exception("Not found Account.");
+                }
+                recruiter.CompanyId = companyResponse.Id;
+
+                await _unitOfWork.recruiterRepository.UpdateAsync(recruiter);
+                await _unitOfWork.companyRegister.AddAsync(companyEntity);
+                await _unitOfWork.SaveChangesAsync();
+
+                return companyResponse;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
         public async Task<string> LoginAsync(LoginRequest request)
         {
             try
@@ -99,7 +133,15 @@ namespace AIJobMatch.Application.Services
 
                 var account = _mapper.Map<Account>(request);
                 account.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
+                
+                var recruiter = new Recruiter
+                {
+                    AccountId = account.Id
+                };
+                await _unitOfWork.recruiterRepository.AddAsync(recruiter);
+
                 await _unitOfWork.userRepository.AddAsync(account);
+                await _unitOfWork.SaveChangesAsync();
 
                 return "Registration successful.";
             }

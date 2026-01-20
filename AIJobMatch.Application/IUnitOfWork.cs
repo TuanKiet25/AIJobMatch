@@ -10,5 +10,8 @@ namespace AIJobMatch.Application
     public interface IUnitOfWork
     {
         IUserRepository userRepository { get; }
+        ICompanyRegister companyRegister { get; }
+        IRecruiterRepository recruiterRepository { get; }
+        Task<int> SaveChangesAsync();
     }
 }

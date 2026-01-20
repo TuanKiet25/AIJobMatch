@@ -25,7 +25,6 @@ namespace AIJobMatch.Infrastructure.Repositories
         public async Task AddAsync(T entity)
         {
             await _db.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<int> CountAsync() => await _db.CountAsync();
@@ -133,7 +132,6 @@ namespace AIJobMatch.Infrastructure.Repositories
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             _db.Update(entity);
-            await _context.SaveChangesAsync(); // Ensure changes are saved to the database
         }
 
         public async Task RemoveRangeAsync(IEnumerable<T> entities)
@@ -168,12 +166,10 @@ namespace AIJobMatch.Infrastructure.Repositories
                 baseEntity.isDeleted = true;
                 baseEntity.UpdateTime = DateTime.UtcNow;
                 _db.Update(entity);
-                await _context.SaveChangesAsync();
             }
             else
             {
                 _db.Remove(entity);
-                await _context.SaveChangesAsync();
             }
         }
 
@@ -181,6 +177,11 @@ namespace AIJobMatch.Infrastructure.Repositories
         {
             _db.RemoveRange(entities);
         }
+
+        //public async Task<int> SaveChangesAsync()
+        //{
+        //    return await _context.SaveChangesAsync();
+        //}
     }
 
 }

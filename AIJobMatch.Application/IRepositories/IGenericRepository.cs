@@ -10,6 +10,7 @@ namespace AIJobMatch.Application.IRepositories
 {
     public interface IGenericRepository<T> where T : class
     {
+        //Task<int> SaveChangesAsync();
         Task<T> GetAsync(Expression<Func<T, bool>> filter);
 
         Task AddAsync(T entity);

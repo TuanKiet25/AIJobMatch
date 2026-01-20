@@ -1,5 +1,7 @@
 ﻿using AIJobMatch.Application.ViewModels.Requests;
+using AIJobMatch.Application.ViewModels.Responses;
 using AIJobMatch.Domain.Entities;
+using AIJobMatch.Domain.Enums;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,20 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
         public MapperConfig()
         {
             CreateMap<RegisterRequest, Account>().ReverseMap();
+            
+            // Mapping cho Company Registration
+            // CompanyRegisterRequest -> Company: Chuyển đổi dữ liệu từ request sang entity để lưu vào database
+            CreateMap<CompanyRegisterRequest, Company>()
+                .ForMember(dest => dest.VerificationStatus, opt => opt.MapFrom(src => VerificationStatus.Pending))
+                .ForMember(dest => dest.VerifiedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.RejectionReason, opt => opt.Ignore())
+                .ForMember(dest => dest.Recruiters, opt => opt.Ignore())
+                .ReverseMap();
+
+            // Company -> CompanyRegisterResponse: Chuyển đổi dữ liệu từ entity sang response để trả về cho client
+            CreateMap<Company, CompanyRegisterResponse>()
+                .ForMember(dest => dest.CreateTime, otp => otp.MapFrom(src => DateTime.UtcNow))
+                .ReverseMap();
         }
     }
 }

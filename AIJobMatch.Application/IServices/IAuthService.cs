@@ -12,5 +12,6 @@ namespace AIJobMatch.Application.IServices
     {
         Task<string> LoginAsync(LoginRequest request);
         Task<string> RegisterAsync(RegisterRequest request);
+        Task<CompanyRegisterResponse> CompanyRegisterAsync(CompanyRegisterRequest request, Guid userId);
     }
 }
