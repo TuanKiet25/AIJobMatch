@@ -37,6 +37,7 @@ namespace AIJobMatch.Infrastructure
             #region services
             services.AddScoped<IAuthService, AuthService>();
             services.AddHttpClient<ITurnstileService, TurnstileService>();
+            services.AddScoped<IAddressService, AddressService>();
             #endregion
             //Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
