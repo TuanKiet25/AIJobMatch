@@ -35,12 +35,12 @@ namespace AIJobMatch.Web.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var result = await _authService.LoginAsync(request);
             var isHuman = await _turnstileService.VerifyTokenAsync(request.CaptchaToken);
             if (!isHuman)
             {
                 return BadRequest("Xác thực Robot không hợp lệ hoặc đã hết hạn.");
             }
+            var result = await _authService.LoginAsync(request);
             if (result == null)
             {
                 return Unauthorized();
