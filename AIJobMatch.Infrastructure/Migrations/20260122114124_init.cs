@@ -162,6 +162,7 @@ namespace AIJobMatch.Infrastructure.Migrations
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
                     TransactionCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TransactionStatus = table.Column<int>(type: "int", nullable: false),
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -170,11 +171,10 @@ namespace AIJobMatch.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Transactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transactions_Accounts_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Transactions_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Transactions_SubscriptionPlans_PlanId",
                         column: x => x.PlanId,
@@ -184,28 +184,28 @@ namespace AIJobMatch.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserSubscription",
+                name: "UserSubscriptions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserSubscription", x => x.Id);
+                    table.PrimaryKey("PK_UserSubscriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserSubscription_Accounts_UserId",
-                        column: x => x.UserId,
+                        name: "FK_UserSubscriptions_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_UserSubscription_SubscriptionPlans_PlanId",
+                        name: "FK_UserSubscriptions_SubscriptionPlans_PlanId",
                         column: x => x.PlanId,
                         principalTable: "SubscriptionPlans",
                         principalColumn: "Id",
@@ -306,6 +306,11 @@ namespace AIJobMatch.Infrastructure.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Transactions_AccountId",
+                table: "Transactions",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_PlanId",
                 table: "Transactions",
                 column: "PlanId");
@@ -322,18 +327,23 @@ namespace AIJobMatch.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSubscription_PlanId",
-                table: "UserSubscription",
+                name: "IX_UserSubscriptions_AccountId",
+                table: "UserSubscriptions",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSubscriptions_PlanId",
+                table: "UserSubscriptions",
                 column: "PlanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSubscription_UserId",
-                table: "UserSubscription",
+                name: "IX_UserSubscriptions_UserId",
+                table: "UserSubscriptions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSubscription_UserId_Status",
-                table: "UserSubscription",
+                name: "IX_UserSubscriptions_UserId_Status",
+                table: "UserSubscriptions",
                 columns: new[] { "UserId", "Status" });
 
             migrationBuilder.CreateIndex(
@@ -358,7 +368,7 @@ namespace AIJobMatch.Infrastructure.Migrations
                 name: "Transactions");
 
             migrationBuilder.DropTable(
-                name: "UserSubscription");
+                name: "UserSubscriptions");
 
             migrationBuilder.DropTable(
                 name: "Wards");

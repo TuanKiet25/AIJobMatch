@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIJobMatch.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260122104608_init")]
+    [Migration("20260122114124_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -284,6 +284,9 @@ namespace AIJobMatch.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
@@ -314,6 +317,8 @@ namespace AIJobMatch.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AccountId");
+
                     b.HasIndex("PlanId");
 
                     b.HasIndex("TransactionCode")
@@ -328,6 +333,9 @@ namespace AIJobMatch.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateTime")
@@ -350,13 +358,15 @@ namespace AIJobMatch.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AccountId");
+
                     b.HasIndex("PlanId");
 
                     b.HasIndex("UserId");
 
                     b.HasIndex("UserId", "Status");
 
-                    b.ToTable("UserSubscription");
+                    b.ToTable("UserSubscriptions");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Ward", b =>
@@ -456,15 +466,13 @@ namespace AIJobMatch.Infrastructure.Migrations
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Transactions", b =>
                 {
+                    b.HasOne("AIJobMatch.Domain.Entities.Account", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("AccountId");
+
                     b.HasOne("AIJobMatch.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
                         .WithMany("Transactions")
                         .HasForeignKey("PlanId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AIJobMatch.Domain.Entities.Account", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -473,16 +481,14 @@ namespace AIJobMatch.Infrastructure.Migrations
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.UserSubscription", b =>
                 {
+                    b.HasOne("AIJobMatch.Domain.Entities.Account", null)
+                        .WithMany("UserSubscriptions")
+                        .HasForeignKey("AccountId");
+
                     b.HasOne("AIJobMatch.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
                         .WithMany("UserSubscriptions")
                         .HasForeignKey("PlanId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AIJobMatch.Domain.Entities.Account", null)
-                        .WithMany("UserSubscriptions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("SubscriptionPlans");
