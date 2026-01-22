@@ -37,27 +37,26 @@ namespace AIJobMatch.Application.Services
                 if (company == null)
                     throw new KeyNotFoundException("Company not found");
                 
-                // Get recruiter ID from JWT token
+  
                 var recruiterIdString = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value;
                 if (string.IsNullOrEmpty(recruiterIdString) || !Guid.TryParse(recruiterIdString, out var recruiterId))
                     throw new Exception("Invalid recruiter ID from token");
 
-                var recruiter = await _unitOfWork.recruiterRepository.GetAsync(r => r.AccountId == recruiterId);
-                if (recruiter == null)
-                    throw new KeyNotFoundException("Recruiter not found");
-
+               //map tay o cho request
                 var jobPosting = _mapper.Map<JobPosting>(request);
-                jobPosting.RecruiterId = recruiter.AccountId; 
-                
+                jobPosting.RecruiterId = recruiterId; 
+
                 await _unitOfWork.jobPostingRepository.AddAsync(jobPosting);
                 await _unitOfWork.SaveChangesAsync();
 
+                //giai quyet response va map tay cho response
                 var response = _mapper.Map<JobPostingResponse>(jobPosting);
                 var address = await _unitOfWork.addressRepository.GetAsync(a => a.CompanyId == company.Id);
-                
-                response.RecruiterName = _httpContextAccessor.HttpContext.User.FindFirst("FullName")?.Value;
+
+                var recruiter = await _unitOfWork.userRepository.GetByIdAsync(response.RecruiterId);
+                response.RecruiterName = recruiter.FullName;
                 response.CompanyName = company.Name;
-                response.RecruiterId = recruiter.AccountId;
+                response.RecruiterId = recruiterId;
                 
                 if (address != null)
                 {
@@ -84,7 +83,7 @@ namespace AIJobMatch.Application.Services
                 if (id == Guid.Empty)
                     throw new Exception("Invalid job posting ID");
 
-                var jobPosting = await _unitOfWork.jobPostingRepository.GetAsync(j => j.Id == id);
+                var jobPosting = await _unitOfWork.jobPostingRepository.GetAsync(j => j.Id == id && !j.isDeleted);
                 if (jobPosting == null)
                     throw new KeyNotFoundException("Job posting not found");
 
@@ -92,12 +91,9 @@ namespace AIJobMatch.Application.Services
                 
                 // Manually map address from Company
                 var company = await _unitOfWork.companyRegister.GetAsync(c => c.Id == jobPosting.CompanyId);
-                if (company?.addresses != null && company.addresses.Any())
-                {
                     var address = await _unitOfWork.addressRepository.GetAsync(a => a.CompanyId == company.Id);
-                    var Recruiter = await _unitOfWork.recruiterRepository.GetByIdAsync(response.RecruiterId);
-                    var user = await _unitOfWork.userRepository.GetByIdAsync(Recruiter.AccountId);
-                    response.RecruiterName = user.FullName;
+                    var recruiter = await _unitOfWork.userRepository.GetByIdAsync(response.RecruiterId);
+                    response.RecruiterName = recruiter.FullName;
                     response.CompanyName = company.Name;
                     response.Address = new AddressResponse
                     {
@@ -105,8 +101,6 @@ namespace AIJobMatch.Application.Services
                         DistrictName = address.DistrictName,
                         WardName = address.WardName
                     };
-                }
-
                 return response;
             }
             catch (Exception ex)
@@ -119,7 +113,7 @@ namespace AIJobMatch.Application.Services
         {
             try
             {
-                var jobPostings = await _unitOfWork.jobPostingRepository.GetAllAsync(null);
+                var jobPostings = await _unitOfWork.jobPostingRepository.GetAllAsync(j => !j.isDeleted);
                 if (jobPostings == null || !jobPostings.Any())
                     throw new KeyNotFoundException("No job postings found");
 
@@ -128,16 +122,13 @@ namespace AIJobMatch.Application.Services
                 // Manually map addresses for all job postings
                 foreach (var response in responses)
                 {
-                    var jobPosting = jobPostings.FirstOrDefault(j => j.Id == response.Id);
+                    var jobPosting = await _unitOfWork.jobPostingRepository.GetByIdAsync(response.Id);
                     if (jobPosting != null)
                     {
-                        var company = await _unitOfWork.companyRegister.GetAsync(c => c.Id == jobPosting.CompanyId);
-                        if (company?.addresses != null && company.addresses.Any())
-                        {
+                            var company = await _unitOfWork.companyRegister.GetAsync(c => c.Id == jobPosting.CompanyId);              
                             var address = await _unitOfWork.addressRepository.GetAsync(a => a.CompanyId == company.Id);
-                            var Recruiter = await _unitOfWork.recruiterRepository.GetByIdAsync(response.RecruiterId);
-                            var user = await _unitOfWork.userRepository.GetByIdAsync(Recruiter.AccountId);
-                            response.RecruiterName = user.FullName;
+                            var recruiter = await _unitOfWork.userRepository.GetByIdAsync(response.RecruiterId);
+                            response.RecruiterName = recruiter.FullName;
                             response.CompanyName = company.Name;
                             response.Address = new AddressResponse
                             {
@@ -145,7 +136,6 @@ namespace AIJobMatch.Application.Services
                                 DistrictName = address.DistrictName,
                                 WardName = address.WardName
                             };
-                        }
                     }
                 }
 
@@ -164,23 +154,17 @@ namespace AIJobMatch.Application.Services
                 if (companyId == Guid.Empty)
                     throw new Exception("Invalid company ID");
 
-                var jobPostings = await _unitOfWork.jobPostingRepository.GetAllAsync(j => j.CompanyId == companyId);
+                var jobPostings = await _unitOfWork.jobPostingRepository.GetAllAsync(j => j.CompanyId == companyId && !j.isDeleted);
                 if (jobPostings == null || !jobPostings.Any())
                     throw new KeyNotFoundException("No job postings found for this company");
 
-                var responses = _mapper.Map<List<JobPostingResponse>>(jobPostings);
-                
-                // Manually map address from Company
+                var responses = _mapper.Map<List<JobPostingResponse>>(jobPostings); 
                 var company = await _unitOfWork.companyRegister.GetAsync(c => c.Id == companyId);
-                if (company?.addresses != null && company.addresses.Any())
-                {
-                    var address = await _unitOfWork.addressRepository.GetAsync(a => a.CompanyId == company.Id);
-                    
+                var address = await _unitOfWork.addressRepository.GetAsync(a => a.CompanyId == company.Id);                   
                     foreach (var response in responses)
                     {
-                        var Recruiter = await _unitOfWork.recruiterRepository.GetByIdAsync(response.RecruiterId);
-                        var user = await _unitOfWork.userRepository.GetByIdAsync(Recruiter.AccountId);
-                        response.RecruiterName = user.FullName;
+                        var recruiter = await _unitOfWork.userRepository.GetByIdAsync(response.RecruiterId);
+                        response.RecruiterName = recruiter.FullName;
                         response.CompanyName = company.Name;
                         response.Address = new AddressResponse
                         {
@@ -189,8 +173,6 @@ namespace AIJobMatch.Application.Services
                             WardName = address.WardName
                         };
                     }
-                }
-
                 return responses;
             }
             catch (Exception ex)
