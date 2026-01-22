@@ -16,6 +16,7 @@ namespace AIJobMatch.Infrastructure
         public IUserRepository userRepository { get; }
         public ICompanyRegister companyRegister { get; }
         public IRecruiterRepository recruiterRepository { get; }
+        public ISubscriptionPlansRepository subscriptionPlansRepository { get; }
 
         public UnitOfWork(AppDbContext context)
         {
@@ -23,6 +24,7 @@ namespace AIJobMatch.Infrastructure
             userRepository = new UserRepository(_context);
             companyRegister = new CompanyRepository(_context);
             recruiterRepository = new RecruiterRepository(_context);
+            subscriptionPlansRepository = new SubscriptionPlansRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

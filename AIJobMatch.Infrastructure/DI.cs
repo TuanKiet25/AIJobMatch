@@ -1,7 +1,10 @@
 ﻿using AIJobMatch.Application;
+using AIJobMatch.Application.IRepositories;
 using AIJobMatch.Application.IServices;
 using AIJobMatch.Application.Services;
 using AIJobMatch.Application.ViewModels.Requests;
+using AIJobMatch.Domain.Entities;
+using AIJobMatch.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,10 +35,12 @@ namespace AIJobMatch.Infrastructure
             // Đăng ký repositiries
             #region Repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ISubscriptionPlansRepository, SubscriptionPlansRepository>();
             #endregion
             // Đăng ký services
             #region services
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
             services.AddHttpClient<ITurnstileService, TurnstileService>();
             #endregion
             //Đăng ký auto mapper
