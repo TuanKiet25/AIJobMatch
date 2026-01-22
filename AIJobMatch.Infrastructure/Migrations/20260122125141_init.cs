@@ -151,6 +151,48 @@ namespace AIJobMatch.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "JobPostings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecruiterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    MinSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    MaxSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsNegotiable = table.Column<bool>(type: "bit", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Requirement = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Benefits = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    YearsOfExperience = table.Column<int>(type: "int", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    ViewCount = table.Column<int>(type: "int", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobPostings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_JobPostings_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_JobPostings_Recruiters_RecruiterId",
+                        column: x => x.RecruiterId,
+                        principalTable: "Recruiters",
+                        principalColumn: "AccountId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Addresses",
                 columns: table => new
                 {
@@ -232,6 +274,16 @@ namespace AIJobMatch.Infrastructure.Migrations
                 column: "CityCode");
 
             migrationBuilder.CreateIndex(
+                name: "IX_JobPostings_CompanyId",
+                table: "JobPostings",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobPostings_RecruiterId",
+                table: "JobPostings",
+                column: "RecruiterId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Recruiters_CompanyId",
                 table: "Recruiters",
                 column: "CompanyId");
@@ -252,19 +304,22 @@ namespace AIJobMatch.Infrastructure.Migrations
                 name: "Candidates");
 
             migrationBuilder.DropTable(
-                name: "Recruiters");
+                name: "JobPostings");
 
             migrationBuilder.DropTable(
                 name: "Wards");
+
+            migrationBuilder.DropTable(
+                name: "Recruiters");
+
+            migrationBuilder.DropTable(
+                name: "Districts");
 
             migrationBuilder.DropTable(
                 name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "Companies");
-
-            migrationBuilder.DropTable(
-                name: "Districts");
 
             migrationBuilder.DropTable(
                 name: "Cities");

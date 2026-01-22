@@ -14,5 +14,6 @@ namespace AIJobMatch.Domain.Entities
         public Account? Account { get; set; }
         public Guid? CompanyId { get; set; }
         public Company? Company { get; set; }
+        public List<JobPosting>? JobPostings { get; set; }
     }
 }

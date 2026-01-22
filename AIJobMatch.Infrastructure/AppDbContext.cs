@@ -23,6 +23,7 @@ namespace AIJobMatch.Infrastructure
         public virtual DbSet<Candidate> Candidates { get; set; }
         public virtual DbSet<Recruiter> Recruiters { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<JobPosting> JobPostings { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

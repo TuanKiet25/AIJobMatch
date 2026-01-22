@@ -17,6 +17,7 @@ namespace AIJobMatch.Application
         IWardRepository wardRepository { get; }
         IAddressRepository addressRepository { get; }
         ICandidateRepository candidateRepository { get; }
+        IJobPostingRepository jobPostingRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }
