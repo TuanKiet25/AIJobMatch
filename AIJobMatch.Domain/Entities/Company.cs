@@ -24,5 +24,6 @@ namespace AIJobMatch.Domain.Entities
         public DateTime VerifiedAt { get; set; }
         public List<Address>? addresses { get; set; }
         public List<Recruiter>? Recruiters { get; set; }
+        public List<JobPosting>? JobPostings { get; set; }
     }
 }

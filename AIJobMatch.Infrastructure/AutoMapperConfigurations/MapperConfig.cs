@@ -33,6 +33,17 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
             CreateMap<City, CityReponse>().ReverseMap();
             CreateMap<District, DistrictResponse>().ReverseMap();
             CreateMap<Ward, WardResponse>().ReverseMap();
+
+            // Mapping cho JobPosting
+            CreateMap<JobPostingRequest, JobPosting>().ReverseMap();
+            CreateMap<JobPostingUpdateRequest, JobPosting>();
+            
+            // JobPosting -> JobPostingResponse: Exclude Address field for manual mapping
+            CreateMap<JobPosting, JobPostingResponse>()
+                .ForMember(dest => dest.Address, opt => opt.Ignore())
+                .ForMember(dest => dest.CompanyName, opt => opt.Ignore())
+                .ForMember(dest => dest.RecruiterName, opt => opt.Ignore())
+                .ReverseMap();
         }
     }
 }

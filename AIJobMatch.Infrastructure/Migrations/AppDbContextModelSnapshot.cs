@@ -225,6 +225,84 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.ToTable("Districts");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.JobPosting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Benefits")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsNegotiable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("JobType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("MaxSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("MinSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RecruiterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Requirement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearsOfExperience")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("RecruiterId");
+
+                    b.ToTable("JobPostings");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Recruiter", b =>
                 {
                     b.Property<Guid>("AccountId")
@@ -323,6 +401,25 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.JobPosting", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.Company", "Company")
+                        .WithMany("JobPostings")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AIJobMatch.Domain.Entities.Recruiter", "Recruiter")
+                        .WithMany("JobPostings")
+                        .HasForeignKey("RecruiterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Recruiter");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Recruiter", b =>
                 {
                     b.HasOne("AIJobMatch.Domain.Entities.Account", "Account")
@@ -370,6 +467,8 @@ namespace AIJobMatch.Infrastructure.Migrations
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Company", b =>
                 {
+                    b.Navigation("JobPostings");
+
                     b.Navigation("Recruiters");
 
                     b.Navigation("addresses");
@@ -380,6 +479,11 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Wards");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Recruiter", b =>
+                {
+                    b.Navigation("JobPostings");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Ward", b =>
