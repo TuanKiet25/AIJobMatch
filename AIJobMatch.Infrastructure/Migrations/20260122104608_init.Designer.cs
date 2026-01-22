@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIJobMatch.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260120032219_init")]
+    [Migration("20260122104608_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -241,6 +241,124 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.ToTable("Recruiters");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.SubscriptionPlans", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DurationInDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Features")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TargetRole")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubscriptionPlans");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Transactions", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TransactionCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("TransactionStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("TransactionCode")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.UserSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "Status");
+
+                    b.ToTable("UserSubscription");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Ward", b =>
                 {
                     b.Property<string>("WardCode")
@@ -336,6 +454,40 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Transactions", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AIJobMatch.Domain.Entities.Account", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SubscriptionPlans");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.UserSubscription", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
+                        .WithMany("UserSubscriptions")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AIJobMatch.Domain.Entities.Account", null)
+                        .WithMany("UserSubscriptions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SubscriptionPlans");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Ward", b =>
                 {
                     b.HasOne("AIJobMatch.Domain.Entities.District", "District")
@@ -354,6 +506,10 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Candidate");
 
                     b.Navigation("Recruiter");
+
+                    b.Navigation("Transactions");
+
+                    b.Navigation("UserSubscriptions");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.City", b =>
@@ -373,6 +529,13 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Wards");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.SubscriptionPlans", b =>
+                {
+                    b.Navigation("Transactions");
+
+                    b.Navigation("UserSubscriptions");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Ward", b =>

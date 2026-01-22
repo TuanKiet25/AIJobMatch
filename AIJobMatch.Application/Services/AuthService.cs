@@ -88,7 +88,6 @@ namespace AIJobMatch.Application.Services
                     Subject = new ClaimsIdentity(new[]
                     {
                         new Claim("Id", account.Id.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Sub, account.FullName),
                         new Claim(JwtRegisteredClaimNames.Sub, account.Email),
                         new Claim(ClaimTypes.Role, account.Role.ToString()),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
