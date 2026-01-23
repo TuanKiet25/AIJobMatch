@@ -17,5 +17,6 @@ namespace AIJobMatch.Application.ViewModels.Responses
         public string Features { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }
+        public bool isDeleted { get; set; }
     }
 }

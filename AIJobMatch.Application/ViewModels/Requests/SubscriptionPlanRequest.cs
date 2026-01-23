@@ -21,6 +21,8 @@ namespace AIJobMatch.Application.ViewModels.Requests
         [Range(1, int.MaxValue, ErrorMessage = "Duration must be at least 1 day")]
         public int DurationInDays { get; set; }
         [Required]
+        public SubscriptionPlansStatus Status { get; set; }
+        [Required]
         public string Features { get; set; }
     }
 }
