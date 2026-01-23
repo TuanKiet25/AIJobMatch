@@ -32,9 +32,11 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
                 .ForMember(dest => dest.Transactions, opt => opt.Ignore());
             
             CreateMap<SubscriptionPlans, SubscriptionPlanResponse>();
+
             CreateMap<Company, CompanyRegisterResponse>()
                 .ForMember(dest => dest.CreateTime, otp => otp.MapFrom(src => DateTime.UtcNow))
                 .ReverseMap();
+
             CreateMap<City, CityReponse>().ReverseMap();
             CreateMap<District, DistrictResponse>().ReverseMap();
             CreateMap<Ward, WardResponse>().ReverseMap();

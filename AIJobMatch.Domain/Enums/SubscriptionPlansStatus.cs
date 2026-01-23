@@ -8,8 +8,8 @@ namespace AIJobMatch.Domain.Enums
 {
     public enum SubscriptionPlansStatus
     {
-        Active,
         Inactive,
+        Active,
         Expired
     }
 }

@@ -108,6 +108,7 @@ namespace AIJobMatch.Application.Services
                 entity.Price = request.Price;
                 entity.DurationInDays = request.DurationInDays;
                 entity.Features = request.Features;
+                entity.Status = request.Status;
                 entity.UpdateTime = DateTime.UtcNow;
 
                 await _unitOfWork.subscriptionPlansRepository.UpdateAsync(entity);
