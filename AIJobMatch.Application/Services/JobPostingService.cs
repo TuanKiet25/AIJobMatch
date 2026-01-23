@@ -32,31 +32,23 @@ namespace AIJobMatch.Application.Services
             {
                 if (request == null)
                     throw new Exception("Job posting request cannot be null");
-                
-                var company = await _unitOfWork.companyRegister.GetAsync(c => c.Id == request.CompanyId);
-                if (company == null)
-                    throw new KeyNotFoundException("Company not found");
-                
-  
-                var recruiterIdString = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value;
+                var recruiterIdString = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value;       
                 if (string.IsNullOrEmpty(recruiterIdString) || !Guid.TryParse(recruiterIdString, out var recruiterId))
                     throw new Exception("Invalid recruiter ID from token");
-
-               //map tay o cho request
+                var recruiterAccount = await _unitOfWork.recruiterRepository.GetAsync(a => a.AccountId == recruiterId);
+                var company = await _unitOfWork.companyRegister.GetAsync(c => c.Id == recruiterAccount.CompanyId);
+                //map tay o cho request
                 var jobPosting = _mapper.Map<JobPosting>(request);
+                jobPosting.CompanyId = company.Id;
                 jobPosting.RecruiterId = recruiterId; 
-
                 await _unitOfWork.jobPostingRepository.AddAsync(jobPosting);
                 await _unitOfWork.SaveChangesAsync();
-
                 //giai quyet response va map tay cho response
                 var response = _mapper.Map<JobPostingResponse>(jobPosting);
                 var address = await _unitOfWork.addressRepository.GetAsync(a => a.CompanyId == company.Id);
-
                 var recruiter = await _unitOfWork.userRepository.GetByIdAsync(response.RecruiterId);
                 response.RecruiterName = recruiter.FullName;
                 response.CompanyName = company.Name;
-                response.RecruiterId = recruiterId;
                 
                 if (address != null)
                 {
