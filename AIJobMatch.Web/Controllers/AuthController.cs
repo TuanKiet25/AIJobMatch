@@ -26,19 +26,23 @@ namespace AIJobMatch.Web.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var result = await _authService.RegisterAsync(request);
-            return Ok(result);
+            if(!result)
+            {
+                return BadRequest("Đăng ký không thành công.");
+            }
+            return Ok("Đăng ký thành công.");
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var result = await _authService.LoginAsync(request);
             var isHuman = await _turnstileService.VerifyTokenAsync(request.CaptchaToken);
             if (!isHuman)
             {
                 return BadRequest("Xác thực Robot không hợp lệ hoặc đã hết hạn.");
             }
+            var result = await _authService.LoginAsync(request);
             if (result == null)
             {
                 return Unauthorized();
@@ -48,9 +52,9 @@ namespace AIJobMatch.Web.Controllers
 
         [AllowAnonymous]
         [HttpPost("company-register")]
-        public async Task<IActionResult> CompanyRegister([FromBody] CompanyRegisterRequest request, Guid userId)
+        public async Task<IActionResult> CompanyRegister([FromBody] CompanyRegisterRequest request)
         {
-            var result = await _authService.CompanyRegisterAsync(request, userId);
+            var result = await _authService.CompanyRegisterAsync(request);
             return Ok(result);
         }
     }

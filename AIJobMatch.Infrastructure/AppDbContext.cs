@@ -23,6 +23,7 @@ namespace AIJobMatch.Infrastructure
         public virtual DbSet<Candidate> Candidates { get; set; }
         public virtual DbSet<Recruiter> Recruiters { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<JobPosting> JobPostings { get; set; }
         public virtual DbSet<SubscriptionPlans> SubscriptionPlans { get; set; }
         public virtual DbSet<Transactions> Transactions { get; set; }
         public virtual DbSet<UserSubscription> UserSubscriptions { get; set; }

@@ -32,6 +32,23 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
                 .ForMember(dest => dest.Transactions, opt => opt.Ignore());
             
             CreateMap<SubscriptionPlans, SubscriptionPlanResponse>();
+            CreateMap<Company, CompanyRegisterResponse>()
+                .ForMember(dest => dest.CreateTime, otp => otp.MapFrom(src => DateTime.UtcNow))
+                .ReverseMap();
+            CreateMap<City, CityReponse>().ReverseMap();
+            CreateMap<District, DistrictResponse>().ReverseMap();
+            CreateMap<Ward, WardResponse>().ReverseMap();
+
+            // Mapping cho JobPosting
+            CreateMap<JobPostingRequest, JobPosting>().ReverseMap();
+            CreateMap<JobPostingUpdateRequest, JobPosting>();
+            
+            // JobPosting -> JobPostingResponse: Exclude Address field for manual mapping
+            CreateMap<JobPosting, JobPostingResponse>()
+                .ForMember(dest => dest.Address, opt => opt.Ignore())
+                .ForMember(dest => dest.CompanyName, opt => opt.Ignore())
+                .ForMember(dest => dest.RecruiterName, opt => opt.Ignore())
+                .ReverseMap();
         }
     }
 }

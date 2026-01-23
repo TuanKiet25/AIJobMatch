@@ -16,9 +16,10 @@ namespace AIJobMatch.Application.ViewModels.Requests
         public string? LogoUrl { get; set; }
         public string? Industry { get; set; }
         public int? Size { get; set; }
-        public string? Address { get; set; }
+        public AddressRequest Address { get; set; }
         [Required]
         public string TaxCode { get; set; }
+        [Required]
         public string BusinessLicenseUrl { get; set; }
     }
 }

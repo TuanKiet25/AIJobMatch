@@ -22,7 +22,9 @@ namespace AIJobMatch.Domain.Entities
         public string WardName { get; set; }
         public Ward? Ward { get; set; }
 
-        public Guid AccountId { get; set; }
+        public Guid? AccountId { get; set; }
         public Account? Account { get; set; }
+        public Guid? CompanyId { get; set; }
+        public Company? Company { get; set; }
     }
 }

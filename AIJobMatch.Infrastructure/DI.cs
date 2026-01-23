@@ -42,6 +42,8 @@ namespace AIJobMatch.Infrastructure
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
             services.AddHttpClient<ITurnstileService, TurnstileService>();
+            services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IJobPostingService, JobPostingService>();
             #endregion
             //Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -67,7 +69,7 @@ namespace AIJobMatch.Infrastructure
                                   });
             });
             //đăng ký HttpContextAccessor
-            //services.AddHttpContextAccessor();
+            services.AddHttpContextAccessor();
             return services;
         }
     }
