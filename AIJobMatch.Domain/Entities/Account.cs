@@ -19,5 +19,7 @@ namespace AIJobMatch.Domain.Entities
         public List<Address>? Addresses { get; set; }
         public Candidate? Candidate { get; set; }
         public Recruiter? Recruiter { get; set; }
+        public List<Transactions>? Transactions { get; set; }
+        public List<UserSubscription>? UserSubscriptions { get; set; }
     }
 }

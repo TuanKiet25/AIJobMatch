@@ -22,6 +22,7 @@ namespace AIJobMatch.Infrastructure
         public IAddressRepository addressRepository { get; }
         public ICandidateRepository candidateRepository { get; }
         public IJobPostingRepository jobPostingRepository { get; }
+        public ISubscriptionPlansRepository subscriptionPlansRepository { get; }
 
         public UnitOfWork(AppDbContext context)
         {
@@ -35,6 +36,7 @@ namespace AIJobMatch.Infrastructure
             addressRepository = new AddressRepository(_context);
             candidateRepository = new CandidateRepository(_context);
             jobPostingRepository = new JobPostingRepository(_context);
+            subscriptionPlansRepository = new SubscriptionPlansRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

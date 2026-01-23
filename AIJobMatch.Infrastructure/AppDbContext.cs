@@ -24,6 +24,9 @@ namespace AIJobMatch.Infrastructure
         public virtual DbSet<Recruiter> Recruiters { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<JobPosting> JobPostings { get; set; }
+        public virtual DbSet<SubscriptionPlans> SubscriptionPlans { get; set; }
+        public virtual DbSet<Transactions> Transactions { get; set; }
+        public virtual DbSet<UserSubscription> UserSubscriptions { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

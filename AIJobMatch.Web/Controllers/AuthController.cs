@@ -19,6 +19,8 @@ namespace AIJobMatch.Web.Controllers
             _turnstileService = turnstileService;
         }
 
+        //XXXX.DUMMY.TOKEN.XXXX
+        //XXXX.DUMMY.TOKEN.FAIL.XXXX
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
