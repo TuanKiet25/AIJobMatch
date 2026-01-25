@@ -44,7 +44,7 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
             // Mapping cho JobPosting
             CreateMap<JobPostingRequest, JobPosting>().ReverseMap();
             CreateMap<JobPostingUpdateRequest, JobPosting>();
-            
+            CreateMap<CompanyUpdateResquest, Company>();
             // JobPosting -> JobPostingResponse: Exclude Address field for manual mapping
             CreateMap<JobPosting, JobPostingResponse>()
                 .ForMember(dest => dest.Address, opt => opt.Ignore())

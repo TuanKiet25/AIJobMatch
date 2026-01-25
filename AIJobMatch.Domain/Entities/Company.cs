@@ -21,6 +21,7 @@ namespace AIJobMatch.Domain.Entities
         public string BusinessLicenseUrl { get; set; }
         public VerificationStatus VerificationStatus { get; set; } = VerificationStatus.Pending;
         public string? RejectionReason { get; set; }
+        public string? InviteCode { get; set; } 
         public DateTime VerifiedAt { get; set; }
         public List<Address>? addresses { get; set; }
         public List<Recruiter>? Recruiters { get; set; }

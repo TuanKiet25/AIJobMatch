@@ -32,12 +32,53 @@ namespace AIJobMatch.Application.Services
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
+        public async Task<bool> CreateCompanyInviteCodeAsync(string inviteCode)
+        {
+            try
+            {
+                if(string.IsNullOrEmpty(inviteCode))
+                {
+                     return false;
+                }
+                var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value
+                 ?? _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    throw new KeyNotFoundException("Không tìm thấy ID người dùng trong Token.");
+                }
+
+                var userId = Guid.Parse(userIdClaim);
+                var recruiter = await _unitOfWork.recruiterRepository.GetAsync(r => r.AccountId == userId);
+                var comany = await _unitOfWork.companyRegister.GetAsync(c => c.Id == recruiter.CompanyId);
+                if (comany == null)
+                {
+                    throw new KeyNotFoundException("Not found Company.");
+                }
+                comany.InviteCode = inviteCode;
+                await _unitOfWork.SaveChangesAsync();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public async Task<CompanyRegisterResponse> CompanyRegisterAsync(CompanyRegisterRequest request)
         {
             try
             {
-                var userId = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value);
+                var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value
+                  ?? _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    throw new Exception("Không tìm thấy ID người dùng trong Token.");
+                }
+
+                var userId = Guid.Parse(userIdClaim);
                 if (request == null) throw new Exception("Null request");
                 if(await _unitOfWork.companyRegister.GetAsync(n => n.TaxCode == request.TaxCode) != null)
                 {

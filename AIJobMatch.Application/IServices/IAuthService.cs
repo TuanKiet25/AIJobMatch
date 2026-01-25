@@ -13,5 +13,6 @@ namespace AIJobMatch.Application.IServices
         Task<string> LoginAsync(LoginRequest request);
         Task<bool> RegisterAsync(RegisterRequest request);
         Task<CompanyRegisterResponse> CompanyRegisterAsync(CompanyRegisterRequest request);
+        public Task<bool> CreateCompanyInviteCodeAsync(string inviteCode);
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIJobMatch.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260123132444_init")]
+    [Migration("20260125140845_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -169,6 +169,9 @@ namespace AIJobMatch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Industry")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InviteCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogoUrl")
