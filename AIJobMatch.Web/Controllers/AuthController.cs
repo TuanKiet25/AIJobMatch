@@ -57,5 +57,27 @@ namespace AIJobMatch.Web.Controllers
             var result = await _authService.CompanyRegisterAsync(request);
             return Ok(result);
         }
+        [AllowAnonymous]
+        [HttpPost("create-invite-code")]
+        public async Task<IActionResult> CreateInviteCode([FromBody] string inviteCode)
+        {
+            try
+            {
+                var result = await _authService.CreateCompanyInviteCodeAsync(inviteCode);
+                if (!result)
+                {
+                    return BadRequest("Mã mời không được để trống");
+                }
+                return Ok("Tạo mã mời thành công.");
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Công Ty hoặc Nhà tuyển dụng không tồn tại!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace AIJobMatch.Application.ViewModels.Responses
         public string? LogoUrl { get; set; }
         public string? Industry { get; set; }
         public int? Size { get; set; }
-        public string? Address { get; set; }
+        public AddressResponse Address { get; set; }
         public string TaxCode { get; set; }
         public string BusinessLicenseUrl { get; set; }
         public VerificationStatus VerificationStatus { get; set; }
