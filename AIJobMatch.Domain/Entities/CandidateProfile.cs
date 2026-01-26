@@ -8,6 +8,7 @@ namespace AIJobMatch.Domain.Entities
 {
     public class CandidateProfile : BaseEntity
     {
+        public string? FullName { get; set; }
         public string? Jobtitle { get; set; }
         public string? AboutMe { get; set; }
         public string? PortfolioUrl { get; set; }
