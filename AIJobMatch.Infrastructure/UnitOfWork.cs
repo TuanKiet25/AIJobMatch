@@ -24,6 +24,7 @@ namespace AIJobMatch.Infrastructure
         public IJobPostingRepository jobPostingRepository { get; }
         public ISubscriptionPlansRepository subscriptionPlansRepository { get; }
         public ITransactionRepository transactionRepository { get; }
+        public IUserSubsriptionRepository userSubsriptionRepository { get; }
         public ISkillRepository skillRepository { get; }
         public ICandidateProfileRepository candidateProfileRepository { get; }
         public IEducationRepository educationRepository { get; }
@@ -47,6 +48,7 @@ namespace AIJobMatch.Infrastructure
             educationRepository = new EducationRepository(_context);
             workExperienceRepository = new WorkExperienceRepository(_context);
             transactionRepository = new TransactionRepository(_context);
+            userSubsriptionRepository = new UserSubsriptionRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()
