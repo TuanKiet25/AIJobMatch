@@ -14,6 +14,6 @@ namespace AIJobMatch.Domain.Entities
         public Account? Account { get; set; }   
         public string? Skill { get; set; }
         public string? Education { get; set; }
-
+        public List<CandidateProfile>? CandidateProfiles { get; set; }
     }
 }

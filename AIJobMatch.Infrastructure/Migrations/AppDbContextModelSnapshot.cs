@@ -135,6 +135,61 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.ToTable("Candidates");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.CandidateProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AboutMe")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Achievements")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CandidateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Contacts")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DesiredJobTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("JobType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Jobtitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PortfolioUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WorkLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("Profiles");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.City", b =>
                 {
                     b.Property<string>("CityCode")
@@ -228,6 +283,52 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.ToTable("Districts");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Education", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Degree")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Grade")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Major")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SchoolName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Educations");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.JobPosting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -319,6 +420,37 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("Recruiters");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Skill", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProficiencyLevel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SkillName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.SubscriptionPlans", b =>
@@ -472,6 +604,46 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.ToTable("Wards");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.WorkExperiences", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Position")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("WorkExperiences");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Address", b =>
                 {
                     b.HasOne("AIJobMatch.Domain.Entities.Account", "Account")
@@ -524,6 +696,17 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.CandidateProfile", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.Candidate", "Candidate")
+                        .WithMany("CandidateProfiles")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Candidate");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.District", b =>
                 {
                     b.HasOne("AIJobMatch.Domain.Entities.City", "City")
@@ -533,6 +716,17 @@ namespace AIJobMatch.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("City");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Education", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.CandidateProfile", "Profile")
+                        .WithMany("Educations")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.JobPosting", b =>
@@ -570,6 +764,17 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Skill", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.CandidateProfile", "Profile")
+                        .WithMany("Skills")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Transactions", b =>
@@ -613,6 +818,17 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("District");
                 });
 
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.WorkExperiences", b =>
+                {
+                    b.HasOne("AIJobMatch.Domain.Entities.CandidateProfile", "Profile")
+                        .WithMany("WorkExperiences")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("AIJobMatch.Domain.Entities.Account", b =>
                 {
                     b.Navigation("Addresses");
@@ -624,6 +840,20 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Navigation("Transactions");
 
                     b.Navigation("UserSubscriptions");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.Candidate", b =>
+                {
+                    b.Navigation("CandidateProfiles");
+                });
+
+            modelBuilder.Entity("AIJobMatch.Domain.Entities.CandidateProfile", b =>
+                {
+                    b.Navigation("Educations");
+
+                    b.Navigation("Skills");
+
+                    b.Navigation("WorkExperiences");
                 });
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.City", b =>
