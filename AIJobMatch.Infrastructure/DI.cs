@@ -36,6 +36,10 @@ namespace AIJobMatch.Infrastructure
             #region Repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ISubscriptionPlansRepository, SubscriptionPlansRepository>();
+            services.AddScoped<ISkillRepository, SkillRepository>();
+            services.AddScoped<ICandidateProfileRepository, CandidateProfileRepository>();
+            services.AddScoped<IEducationRepository, EducationRepository>();
+            services.AddScoped<IWorkExperienceRepository, WorkExperienceRepository>();
             #endregion
             // Đăng ký services
             #region services
