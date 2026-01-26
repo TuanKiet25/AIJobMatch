@@ -181,7 +181,8 @@ namespace AIJobMatch.Application.Services
                 var tokenObj = jwtTokenHandler.CreateToken(tokenDescription);
                 var jwtToken = jwtTokenHandler.WriteToken(tokenObj);
 
-                return jwtToken;
+                return $"Account Id :{account.Id.ToString()} token: {jwtToken}";
+
             }
             catch (Exception ex)
             {

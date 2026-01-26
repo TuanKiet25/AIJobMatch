@@ -51,6 +51,8 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
                 .ForMember(dest => dest.CompanyName, opt => opt.Ignore())
                 .ForMember(dest => dest.RecruiterName, opt => opt.Ignore())
                 .ReverseMap();
+            CreateMap<UserUpdateRequest, Account>();
+            CreateMap<Account, UserResponse>();
         }
     }
 }
