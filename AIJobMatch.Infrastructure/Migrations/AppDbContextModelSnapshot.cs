@@ -334,11 +334,9 @@ namespace AIJobMatch.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Features")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
@@ -382,9 +380,8 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Property<Guid>("PlanId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("TransactionCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TransactionCode")
+                        .HasColumnType("int");
 
                     b.Property<int>("TransactionStatus")
                         .HasColumnType("int");

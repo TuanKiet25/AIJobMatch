@@ -1,4 +1,4 @@
-using AIJobMatch.Application;
+﻿using AIJobMatch.Application;
 using AIJobMatch.Application.IRepositories;
 using AIJobMatch.Application.IServices;
 using AIJobMatch.Application.ViewModels.Requests;
@@ -97,6 +97,7 @@ namespace AIJobMatch.Application.Services
                 }
 
                     // Check if another plan with same name exists (excluding current one)
+                    //sửa lại phần này vì khi không cho sửa tên luôn
                     var existingPlan = await _unitOfWork.subscriptionPlansRepository.GetAsync(sp => sp.Name == request.Name && sp.Id != id && !sp.isDeleted);
                 if (existingPlan != null)
                 {

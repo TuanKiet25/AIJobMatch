@@ -20,6 +20,7 @@ namespace AIJobMatch.Application
         IJobPostingRepository jobPostingRepository { get; }
         ISubscriptionPlansRepository subscriptionPlansRepository { get; }
         ITransactionRepository transactionRepository { get; }
+        IUserSubsriptionRepository userSubsriptionRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }
