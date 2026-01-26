@@ -14,6 +14,7 @@ namespace AIJobMatch.Application.IServices
         public Task<ServiceResult<CVResponse>> GetCVByIdAsync(Guid cvId);
         public Task<ServiceResult<CVResponse>> UpdateCVAsync(Guid cvId, CVRequest cvRequest);
         public Task<ServiceResult<string>> DeleteCVAsync(Guid cvId);
-        public Task<ServiceResult<List<CVResponse>>> GetAllCVsAsync();
+        public Task<ServiceResult<List<CVResponse>>> GetAllCVsByCandidateIdAsync();
+        public Task<ServiceResult<string>> ActiveCvAsync (Guid cvId, bool isActive);
     }
 }

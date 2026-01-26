@@ -1,4 +1,5 @@
-﻿using AIJobMatch.Domain.Entities;
+﻿using AIJobMatch.Application.ViewModels.Responses;
+using AIJobMatch.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,8 @@ namespace AIJobMatch.Application.ViewModels.Requests
         public string? Contacts { get; set; }
         public bool IsActive { get; set; } 
         public Guid CandidtateId { get; set; }
-        public Candidate? Candidate { get; set; }
-        public List<Skill>? Skills { get; set; }
-        public List<WorkExperiences>? WorkExperiences { get; set; }
-        public List<Education>? Educations { get; set; }
+        public List<SkillRequest>? Skills { get; set; }
+        public List<WorkExRequest>? WorkExperiences { get; set; }
+        public List<EducationRequest>? Educations { get; set; }
     }
 }
