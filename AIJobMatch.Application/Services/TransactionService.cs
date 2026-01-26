@@ -5,6 +5,7 @@ using AIJobMatch.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using PayOS;
 using PayOS.Models.V2.PaymentRequests;
+using PayOS.Models.Webhooks;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -63,7 +64,7 @@ namespace AIJobMatch.Application.Services
                     PlanId = request.PlanId,
                     Amount = subscriptionPlan.Price,
                     PaymentMethod = PaymentMethod.Banking, // Mặc định là Banking cho PayOS
-                    TransactionCode = transactionCode,
+                    TransactionCode = orderCode,
                     TransactionStatus = TransactionStatus.Pending,
                     CreateTime = DateTime.UtcNow,
                     UpdateTime = DateTime.UtcNow,
@@ -93,17 +94,58 @@ namespace AIJobMatch.Application.Services
                 throw new Exception($"Error creating payment: {ex.Message}", ex);
             }
         }
-    }
 
-    internal class PaymentData : CreatePaymentLinkRequest
-    {
-        public PaymentData(int orderCode, int amount, string description, string? returnUrl, string? cancelUrl)
+        public async Task<bool> VerifyWebhookSuccess(Webhook webhookData)
         {
-            OrderCode = orderCode;
-            Amount = amount;
-            Description = description;
-            ReturnUrl = returnUrl;
-            CancelUrl = cancelUrl;
+            try
+            {
+                var verifiedData = await _payOS.Webhooks.VerifyAsync(webhookData);
+                long payOSOrderCode = verifiedData.OrderCode;
+
+                var transaction = await _unitOfWork.transactionRepository
+                    .GetAsync(x => x.TransactionCode == payOSOrderCode);
+
+                if (transaction == null)
+                {
+                    throw new Exception($"Không tìm thấy giao dịch với mã: {payOSOrderCode}");
+                }
+                transaction.TransactionStatus = TransactionStatus.Completed;
+                transaction.UpdateTime = DateTime.UtcNow;
+                var userId = transaction.UserId;
+                await _unitOfWork.transactionRepository.UpdateAsync(transaction);
+
+                var userSubscription = new UserSubscription
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    PlanId = transaction.PlanId,
+                    Status = UserSubscriptionStatus.Active,
+                    CreateTime = DateTime.UtcNow,
+                    UpdateTime = DateTime.UtcNow,
+                    isDeleted = false
+                };
+                await _unitOfWork.userSubsriptionRepository.AddAsync(userSubscription);
+
+                await _unitOfWork.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error handling webhook: {ex.Message}", ex);
+            }
+        }
+
+
+        internal class PaymentData : CreatePaymentLinkRequest
+        {
+            public PaymentData(int orderCode, int amount, string description, string? returnUrl, string? cancelUrl)
+            {
+                OrderCode = orderCode;
+                Amount = amount;
+                Description = description;
+                ReturnUrl = returnUrl;
+                CancelUrl = cancelUrl;
+            }
         }
     }
 }
