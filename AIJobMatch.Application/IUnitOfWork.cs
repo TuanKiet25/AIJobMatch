@@ -19,6 +19,7 @@ namespace AIJobMatch.Application
         ICandidateRepository candidateRepository { get; }
         IJobPostingRepository jobPostingRepository { get; }
         ISubscriptionPlansRepository subscriptionPlansRepository { get; }
+        ITransactionRepository transactionRepository { get; }
         ISkillRepository skillRepository { get; }
         ICandidateProfileRepository candidateProfileRepository { get; }
         IEducationRepository educationRepository { get; }

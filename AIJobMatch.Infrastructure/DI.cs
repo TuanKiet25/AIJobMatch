@@ -24,6 +24,7 @@ namespace AIJobMatch.Infrastructure
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.AddHttpContextAccessor();
             // Đăng ký AppDbContext
             services.AddDbContext<AppDbContext>(options =>
             {
@@ -48,6 +49,7 @@ namespace AIJobMatch.Infrastructure
             services.AddHttpClient<ITurnstileService, TurnstileService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IJobPostingService, JobPostingService>();
+            services.AddTransient<ITransactionService, TransactionService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IUserService, UserService>();
             #endregion
@@ -58,7 +60,7 @@ namespace AIJobMatch.Infrastructure
             //configuration.Bind(JwtSettings.SectionName, jwtSettings);
             //services.AddSingleton(jwtSettings); // Dùng AddSingleton vì cài đặt không thay đổi
             // Cấu hình dịch vụ Authentication của .NET Core
-            
+
             // Đăng ký MailSettings
             //services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
             // Đăng ký CORS

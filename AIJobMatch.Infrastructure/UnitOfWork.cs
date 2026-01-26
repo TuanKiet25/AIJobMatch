@@ -23,6 +23,7 @@ namespace AIJobMatch.Infrastructure
         public ICandidateRepository candidateRepository { get; }
         public IJobPostingRepository jobPostingRepository { get; }
         public ISubscriptionPlansRepository subscriptionPlansRepository { get; }
+        public ITransactionRepository transactionRepository { get; }
         public ISkillRepository skillRepository { get; }
         public ICandidateProfileRepository candidateProfileRepository { get; }
         public IEducationRepository educationRepository { get; }
@@ -45,6 +46,7 @@ namespace AIJobMatch.Infrastructure
             candidateProfileRepository = new CandidateProfileRepository(_context);
             educationRepository = new EducationRepository(_context);
             workExperienceRepository = new WorkExperienceRepository(_context);
+            transactionRepository = new TransactionRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

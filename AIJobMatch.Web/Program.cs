@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PayOS;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -66,6 +67,13 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Secret"]))
     };
 });
+
+//Đăng ký PayOS
+builder.Services.AddSingleton(new PayOSClient(
+    builder.Configuration["PayOS:ClientId"] ?? throw new Exception("Missing ClientId"),
+    builder.Configuration["PayOS:ApiKey"] ?? throw new Exception("Missing ApiKey"),
+    builder.Configuration["PayOS:ChecksumKey"] ?? throw new Exception("Missing ChecksumKey")
+));
 
 builder.Services.AddAuthorization();
 builder.Services.Configure<TurnstileSettings>(builder.Configuration.GetSection("TurnstileSettings"));

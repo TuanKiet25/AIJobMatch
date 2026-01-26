@@ -15,7 +15,7 @@ namespace AIJobMatch.Domain.Entities
         public Guid PlanId { get; set; }
         public Decimal Amount { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
-        public string TransactionCode { get; set; }
+        public string? TransactionCode { get; set; }
         public TransactionStatus TransactionStatus { get; set; }
         public SubscriptionPlans? SubscriptionPlans { get; set; }
     }
