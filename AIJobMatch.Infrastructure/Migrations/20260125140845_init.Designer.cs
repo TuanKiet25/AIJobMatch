@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIJobMatch.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260123013317_i")]
-    partial class i
+    [Migration("20260125140845_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,6 +169,9 @@ namespace AIJobMatch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Industry")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InviteCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogoUrl")

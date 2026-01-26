@@ -46,6 +46,7 @@ namespace AIJobMatch.Infrastructure
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IJobPostingService, JobPostingService>();
             services.AddTransient<ITransactionService, TransactionService>();
+            services.AddScoped<ICompanyService, CompanyService>();
             #endregion
             //Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

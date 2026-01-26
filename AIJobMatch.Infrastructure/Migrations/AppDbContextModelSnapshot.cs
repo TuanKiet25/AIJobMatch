@@ -168,6 +168,9 @@ namespace AIJobMatch.Infrastructure.Migrations
                     b.Property<string>("Industry")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("InviteCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LogoUrl")
                         .HasColumnType("nvarchar(max)");
 
