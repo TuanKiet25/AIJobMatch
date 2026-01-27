@@ -117,7 +117,7 @@ using (var scope = app.Services.CreateScope())
 //}
 
 app.UseHttpsRedirection();
-app.UseCors("_myAllowSpecificOrigins");
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
