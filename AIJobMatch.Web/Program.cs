@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Models;
 using PayOS;
 using System.Text;
 using System.Text.Json.Serialization;
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -79,6 +79,12 @@ builder.Services.AddAuthorization();
 builder.Services.Configure<TurnstileSettings>(builder.Configuration.GetSection("TurnstileSettings"));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate(); // Tự động tạo bảng khi deploy
+}
 
 using (var scope = app.Services.CreateScope())
 {
