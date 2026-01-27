@@ -11,6 +11,7 @@ namespace AIJobMatch.Application.ViewModels.Responses
     public class CVResponse
     {
         public Guid Id { get; set; }
+        public string? Template { get; set; }
         public string? FullName { get; set; }
         public string? Jobtitle { get; set; }
         public string? AboutMe { get; set; }

@@ -10,6 +10,7 @@ namespace AIJobMatch.Application.ViewModels.Requests
 {
     public class CVRequest
     {
+        public string? Template { get; set; }
         public string? FullName { get; set; }
         public string? Jobtitle { get; set; }
         public string? AboutMe { get; set; }
