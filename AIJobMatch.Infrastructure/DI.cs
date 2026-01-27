@@ -28,7 +28,7 @@ namespace AIJobMatch.Infrastructure
             // Đăng ký AppDbContext
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(
+                options.UseNpgsql(
                     configuration.GetConnectionString("DefaultConnection"),
                     sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
             });
