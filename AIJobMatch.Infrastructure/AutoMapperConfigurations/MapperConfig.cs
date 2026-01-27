@@ -53,12 +53,7 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
                 .ReverseMap();
             CreateMap<UserUpdateRequest, Account>();
             CreateMap<Account, UserResponse>();
-            CreateMap<CVRequest, CandidateProfile>()
-                .ForMember(dest => dest.Candidate, opt => opt.Ignore()) 
-                .ForMember(dest => dest.Skills, opt => opt.Ignore())   
-                .ForMember(dest => dest.WorkExperiences, opt => opt.Ignore())
-                .ForMember(dest => dest.Educations, opt => opt.Ignore()); ;
-
+            CreateMap<CVRequest, CandidateProfile>();
             CreateMap<SkillRequest, Skill>();
             CreateMap<WorkExRequest, WorkExperiences>();
             CreateMap<EducationRequest, Education>();

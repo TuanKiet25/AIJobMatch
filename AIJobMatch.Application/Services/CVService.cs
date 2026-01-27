@@ -261,6 +261,7 @@ namespace AIJobMatch.Application.Services
                 }
 
                 // Map các field từ request (không map collections)
+                cv.FullName = cvRequest.FullName;
                 cv.Jobtitle = cvRequest.Jobtitle;
                 cv.AboutMe = cvRequest.AboutMe;
                 cv.PortfolioUrl = cvRequest.PortfolioUrl;
