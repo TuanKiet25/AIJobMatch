@@ -65,14 +65,13 @@ namespace AIJobMatch.Infrastructure
             // Đăng ký MailSettings
             //services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
             // Đăng ký CORS
-            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
+                options.AddPolicy("AllowAll",
                                   policy =>
                                   {
                                       // Cho phép origin của frontend được truy cập
-                                      policy.WithOrigins("http://localhost:8080")
+                                      policy.AllowAnyOrigin()
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
                                   });
