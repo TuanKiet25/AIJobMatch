@@ -106,11 +106,15 @@ using (var scope = app.Services.CreateScope())
     }
 }
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "AIJobMatch API v1");
+        options.RoutePrefix = string.Empty; // Dòng thần thánh này giúp Swagger hiện ngay trang chủ
+    });
+//}
 
 app.UseHttpsRedirection();
 app.UseCors("_myAllowSpecificOrigins");
