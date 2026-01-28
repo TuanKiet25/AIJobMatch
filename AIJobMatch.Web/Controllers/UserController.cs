@@ -43,5 +43,11 @@ namespace AIJobMatch.Web.Controllers
             var result = await _userService.DeleteUserAsync(id);
             return HandleResult(result);
         }
+        [HttpPut("Join_Company_By_Code/{inviteCode}")]  
+        public async Task<IActionResult> JoinCompanyByCode(string inviteCode)
+        {
+            var result = await _userService.JoinCompanybyCodeAsync(inviteCode);
+            return HandleResult(result);
+        }
     }
 }
