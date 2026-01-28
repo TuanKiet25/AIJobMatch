@@ -100,6 +100,26 @@ namespace AIJobMatch.Application.Services
 
         }
 
+        public  async Task<ServiceResult<List<UserResponse>>> GetAllRecruiterbyCombanyIdAsync(Guid id)
+        {
+            try
+            {
+                var recruiters = await _unitOfWork.recruiterRepository.GetAllAsync(r => r.CompanyId == id);
+                var listUser = new List<Account>();
+                foreach (var recruiter in recruiters)
+                {
+                    var user = await _unitOfWork.userRepository.GetByIdAsync(recruiter.AccountId);
+                    listUser.Add(user);
+                }
+                    var responses = _mapper.Map<List<UserResponse>>(listUser);
+                    return new ServiceResult<List<UserResponse>> { Data = responses, IsSuccess = true };
+                }
+            catch (Exception ex)
+            {
+                return new ServiceResult<List<UserResponse>> { Data = null, IsSuccess = false, Message = ex.Message };
+            }
+        }
+
         public async Task< ServiceResult<CompanyRegisterResponse>> GetCompanyByIdAsync(Guid companyId)
         {
             try

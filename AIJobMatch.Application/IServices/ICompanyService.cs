@@ -19,5 +19,6 @@ namespace AIJobMatch.Application.IServices
         public Task<ServiceResult<List<CompanyRegisterResponse>>> GetAllCompanyPedingVerifyAsync();
         public Task<ServiceResult<string>> GetCompanyInviteCodeAsync(Guid companyId);
         public Task<ServiceResult<CompanyRegisterResponse>> GetCompanyByRecruiterId (Guid id);
+        public Task<ServiceResult<List<UserResponse>>> GetAllRecruiterbyCombanyIdAsync(Guid id);
     }
 }

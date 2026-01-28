@@ -63,5 +63,11 @@ namespace AIJobMatch.Web.Controllers
             var result = await _companyService.GetCompanyByRecruiterId(id);
             return HandleResult(result);
         }
+        [HttpGet("get-all-recruiter-by-companyId/{id}")]
+        public async Task<IActionResult> GetAllRecruiterbyCompanyId(Guid id)
+        {
+            var result = await _companyService.GetAllRecruiterbyCombanyIdAsync(id);
+            return HandleResult(result);
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace AIJobMatch.Application.IServices
         public Task<ServiceResult<UserResponse>> GetUserByIdAsync(Guid userId);
         public Task<ServiceResult<string>> UpdateUserAsync(Guid userId, UserUpdateRequest request);
         public Task<ServiceResult<string>> DeleteUserAsync(Guid userId);
+        public Task<ServiceResult<string>> JoinCompanybyCodeAsync(string inviteCode);
     }
 }
