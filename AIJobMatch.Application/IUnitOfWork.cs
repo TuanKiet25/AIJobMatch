@@ -25,6 +25,7 @@ namespace AIJobMatch.Application
         ICandidateProfileRepository candidateProfileRepository { get; }
         IEducationRepository educationRepository { get; }
         IWorkExperienceRepository workExperienceRepository { get; }
+        IJobApplicationRepository jobApplicationRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }
