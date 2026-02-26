@@ -37,6 +37,7 @@ namespace AIJobMatch.Domain.Entities
         public DateTime ExpiryDate { get; set; } 
         public bool IsActive { get; set; } = true; 
         public int ViewCount { get; set; } 
+        public List<JobApplication>? JobApplications { get; set; }
     }
 }
 

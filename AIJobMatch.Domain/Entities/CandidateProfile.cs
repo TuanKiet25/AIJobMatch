@@ -25,5 +25,6 @@ namespace AIJobMatch.Domain.Entities
         public List<Skill>? Skills { get; set; } 
         public List<WorkExperiences>? WorkExperiences { get; set; } 
         public List<Education>? Educations { get; set; }    
+        public List<JobApplication>? JobApplications { get; set; }
     }
 }
