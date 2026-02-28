@@ -233,30 +233,25 @@ namespace AIJobMatch.Application.Services
                         Message = "CV not found."
                     };
                 }
-
-                // Soft delete các item cũ trực tiếp trên entity đã được track
                 if (cv.Skills?.Any() == true)
                 {
                     foreach (var skill in cv.Skills.ToList())
                     {
-                        skill.isDeleted = true;
-                        skill.UpdateTime = DateTime.UtcNow;
+                        await _unitOfWork.skillRepository.RemoveByIdAsync(skill.Id); 
                     }
                 }
                 if (cv.WorkExperiences?.Any() == true)
                 {
                     foreach (var workEx in cv.WorkExperiences.ToList())
                     {
-                        workEx.isDeleted = true;
-                        workEx.UpdateTime = DateTime.UtcNow;
+                        await _unitOfWork.workExperienceRepository.RemoveByIdAsync(workEx.Id); 
                     }
                 }
                 if (cv.Educations?.Any() == true)
                 {
                     foreach (var edu in cv.Educations.ToList())
                     {
-                        edu.isDeleted = true;
-                        edu.UpdateTime = DateTime.UtcNow;
+                        await _unitOfWork.educationRepository.RemoveByIdAsync(edu.Id);
                     }
                 }
 
