@@ -10,8 +10,8 @@ namespace AIJobMatch.Application.IServices
 {
     public interface IAuthService
     {
-        Task<string> LoginAsync(LoginRequest request);
-        Task<bool> RegisterAsync(RegisterRequest request);
+        Task<ServiceResult<string>> LoginAsync(LoginRequest request);
+        Task<ServiceResult<string>> RegisterAsync(RegisterRequest request);
         Task<CompanyRegisterResponse> CompanyRegisterAsync(CompanyRegisterRequest request);
         public Task<bool> CreateCompanyInviteCodeAsync(string inviteCode);
     }

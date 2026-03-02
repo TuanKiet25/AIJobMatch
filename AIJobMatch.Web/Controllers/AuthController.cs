@@ -9,7 +9,7 @@ namespace AIJobMatch.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : MyBaseController
     {
         private readonly IAuthService _authService;
         private readonly ITurnstileService _turnstileService;
@@ -26,11 +26,7 @@ namespace AIJobMatch.Web.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var result = await _authService.RegisterAsync(request);
-            if(!result)
-            {
-                return BadRequest("Đăng ký không thành công.");
-            }
-            return Ok("Đăng ký thành công.");
+            return HandleResult(result);    
         }
 
         [AllowAnonymous]
@@ -42,12 +38,7 @@ namespace AIJobMatch.Web.Controllers
             {
                 return BadRequest("Xác thực Robot không hợp lệ hoặc đã hết hạn.");
             }
-            var result = await _authService.LoginAsync(request);
-            if (result == null)
-            {
-                return Unauthorized();
-            }
-            return Ok(result);
+            return HandleResult(await _authService.LoginAsync(request));
         }
 
         [AllowAnonymous]
