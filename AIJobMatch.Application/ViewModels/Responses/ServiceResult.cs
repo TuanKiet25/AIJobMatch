@@ -10,7 +10,7 @@ namespace AIJobMatch.Application.ViewModels.Responses
     {
         public bool IsSuccess { get; set; }
         public T? Data { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
         public bool IsNotFound { get; set; } 
     }
 }
