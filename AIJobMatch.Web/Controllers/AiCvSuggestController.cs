@@ -13,21 +13,39 @@ namespace AIJobMatch.Web.Controllers
     public class AiCvSuggestController : MyBaseController
     {
         private readonly IAiCvService _aiCvService;
-        public AiCvSuggestController(IAiCvService aiCvService)
+        private readonly IValidateService _validateService;
+        public AiCvSuggestController(IAiCvService aiCvService, IValidateService validateService)
         {
             _aiCvService = aiCvService;
+            _validateService = validateService;
         }   
         [HttpPost("suggest-cv")]
         public async Task<IActionResult> SuggestCv([FromBody] CVRequest cVRequest)
         {
-            var result = await _aiCvService.SuggestCvDataAsync(cVRequest);
-            return HandleResult(result);
+            string checkResult = await _validateService.ValidateCandidateSubcription("Plus");
+            if (checkResult == "Success")
+            {
+                var result = await _aiCvService.SuggestCvDataAsync(cVRequest);
+                return HandleResult(result);
+            }
+            else
+            {
+                return BadRequest(checkResult);
+            }
         }
         [HttpPost("suggest-cv-by-Id")]
         public async Task<IActionResult> SuggestCvById([FromBody] Guid id)
         {
-            var result = await _aiCvService.SuggestCvDataByIdAsync(id);
-            return HandleResult(result);
+            string checkResult = await _validateService.ValidateCandidateSubcription("Plus");
+            if (checkResult == "Success")
+            {
+                var result = await _aiCvService.SuggestCvDataByIdAsync(id);
+                return HandleResult(result);
+            }
+            else
+            {
+                return BadRequest(checkResult);
+            }
         }
     }
 }

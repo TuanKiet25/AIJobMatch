@@ -138,7 +138,7 @@ namespace AIJobMatch.Application.Services
 
         internal class PaymentData : CreatePaymentLinkRequest
         {
-            public PaymentData(int orderCode, int amount, string description, string? returnUrl, string? cancelUrl)
+            public PaymentData(int orderCode, int amount, string description, string returnUrl, string cancelUrl)
             {
                 OrderCode = orderCode;
                 Amount = amount;
