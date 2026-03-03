@@ -15,6 +15,7 @@ namespace AIJobMatch.Application.ViewModels.Responses
         public decimal Price { get; set; }
         public int DurationInDays { get; set; }
         public string Features { get; set; }
+        public SubscriptionPlansStatus Status { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }
         public bool isDeleted { get; set; }
