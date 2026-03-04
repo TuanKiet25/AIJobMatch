@@ -120,6 +120,29 @@ namespace AIJobMatch.Web.Controllers
         }
 
         /// <summary>
+        /// Update subscription plan to inactive
+        /// </summary>
+        [HttpPut("UpdateStatusToInactive_{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> UpdateStatusToInactive(Guid id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _subscriptionPlanService.ChangeStatusToInactiveAsync(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
         /// Delete subscription plan (soft delete)
         /// </summary>
         [HttpDelete("Delete_{id}")]
