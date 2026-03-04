@@ -50,5 +50,26 @@ namespace AIJobMatch.Web.Controllers
                 return BadRequest("Invalid webhook");
             }
         }
+
+        [HttpPost("apply-subscription")]
+        public async Task<IActionResult> ApplySubscription([FromQuery] Guid planId)
+        {
+            try
+            {
+                var result = await _transactionService.ApplySubscription(planId);
+                if (result.IsSuccess)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

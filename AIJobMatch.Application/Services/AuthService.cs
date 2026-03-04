@@ -129,59 +129,25 @@ namespace AIJobMatch.Application.Services
             }
         }
         
-        public async Task<string> LoginAsync(LoginRequest request)
+        public async Task<ServiceResult<string>> LoginAsync(LoginRequest request)
         {
             try
             {
                 if(request == null) throw new Exception("Null request");
                 if(string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.PasswordHash))
                 {
-                    throw new Exception("Email and Password cannot be empty.");
+                    return new ServiceResult<string> { IsSuccess = false, Message = "Email and Password cannot be empty."};
                 }
 
                 var account = await _unitOfWork.userRepository.GetAsync(u => u.Email == request.Email && !u.isDeleted);
                 if(account == null || !BCrypt.Net.BCrypt.Verify(request.PasswordHash, account.PasswordHash))
                 {
-                    throw new Exception("Incorrect Email or Password.");
+                    return new ServiceResult<string> { IsSuccess = false, Message = "Incorrect Email or Password." };
                 }
 
-                // 3. TẠO TOKEN (Generate Token)
-                var jwtTokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = GenerateJwtToken(account);
 
-                // Lấy Secret Key từ Config (Đảm bảo giống hệt trong Program.cs)
-                var secretKeyBytes = Encoding.UTF8.GetBytes(_configuration["JwtConfig:Secret"]);
-
-                var tokenDescription = new SecurityTokenDescriptor
-                {
-                    // A. Payload (Chứa thông tin user)
-                    Subject = new ClaimsIdentity(new[]
-                    {
-                        new Claim("Id", account.Id.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Name, account.FullName),
-                        new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                        new Claim(ClaimTypes.Role, account.Role.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                
-                        // Nếu có Role thì thêm vào đây:
-                        // new Claim(ClaimTypes.Role, account.Role) 
-                    }),
-
-                    // B. Thời gian hết hạn (Lấy từ config hoặc fix cứng)
-                    Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["JwtConfig:AccessTokenExpiration"])),
-
-                    // C. Thuật toán ký (Quan trọng)
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature),
-
-                    // D. Issuer & Audience (Phải khớp với cấu hình ở Program.cs nếu có check)
-                    Issuer = _configuration["JwtConfig:Issuer"],
-                    Audience = _configuration["JwtConfig:Audience"]
-                };
-
-                // 4. Tạo token và chuyển thành chuỗi string
-                var tokenObj = jwtTokenHandler.CreateToken(tokenDescription);
-                var jwtToken = jwtTokenHandler.WriteToken(tokenObj);
-
-                return $"Account Id :{account.Id.ToString()} token: {jwtToken}";
+                return new ServiceResult<string> { IsSuccess = true, Message = $"Account Id :{account.Id.ToString()} token: {jwtToken}" } ;
 
             }
             catch (Exception ex)
@@ -190,7 +156,7 @@ namespace AIJobMatch.Application.Services
             }
         }
 
-        public async Task<bool>RegisterAsync(RegisterRequest request)
+        public async Task<ServiceResult<string>> RegisterAsync(RegisterRequest request)
         {
             try
             {
@@ -198,7 +164,7 @@ namespace AIJobMatch.Application.Services
                 var existingAccount = await _unitOfWork.userRepository.GetAsync(u => (u.Email == request.Email || u.PhoneNumber == request.PhoneNumber) && !u.isDeleted);
                 if (existingAccount != null)
                 {
-                    return false;
+                    return new ServiceResult<string> { IsSuccess = false, Message = "Your Email or your phone number already exist please check again!!!" }; 
                 }
                 var account = _mapper.Map<Account>(request);
                 account.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
@@ -220,13 +186,37 @@ namespace AIJobMatch.Application.Services
                 }
                     await _unitOfWork.userRepository.AddAsync(account);
                 await _unitOfWork.SaveChangesAsync();
-
-                return true;
+                var jwtToken = GenerateJwtToken(account);
+                return new ServiceResult<string> { IsSuccess = true, Message = $"Account Id :{account.Id.ToString()} token: {jwtToken}" } ;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+        }
+        private string GenerateJwtToken(Account account)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_configuration["JwtConfig:Secret"]);
+
+            var tokenDescription = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+            new Claim("Id", account.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Name, account.FullName ?? ""),
+            new Claim(JwtRegisteredClaimNames.Email, account.Email),
+            new Claim(ClaimTypes.Role, account.Role.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        }),
+                Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["JwtConfig:AccessTokenExpiration"])),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = _configuration["JwtConfig:Issuer"],
+                Audience = _configuration["JwtConfig:Audience"]
+            };
+
+            var tokenObj = jwtTokenHandler.CreateToken(tokenDescription);
+            return jwtTokenHandler.WriteToken(tokenObj);
         }
     }
 }

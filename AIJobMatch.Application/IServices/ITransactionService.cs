@@ -1,4 +1,5 @@
 using AIJobMatch.Application.ViewModels.Requests;
+using AIJobMatch.Application.ViewModels.Responses;
 using PayOS.Models.Webhooks;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace AIJobMatch.Application.IServices
     {
         Task<string> CreatePayment(CreatePaymentRequest request);
         Task<bool> VerifyWebhookSuccess(Webhook webhookData);
+        Task<ServiceResult<string>> ApplySubscription(Guid planId);
     }
 }
