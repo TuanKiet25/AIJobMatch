@@ -155,5 +155,34 @@ namespace AIJobMatch.Application.Services
                 throw new Exception($"Error getting subscription plans: {ex.Message}");
             }
         }
+
+        public async Task<ServiceResult<string>> ChangeStatusToInactiveAsync(Guid id)
+        {
+            try
+            {
+                var subPlan = await _unitOfWork.subscriptionPlansRepository.GetByIdAsync(id);
+                if (subPlan == null || subPlan.isDeleted)
+                {
+                    return new ServiceResult<string>
+                    {
+                        IsSuccess = false,
+                        Message = "Subscription plan not found."
+                    };
+                }
+                subPlan.Status = SubscriptionPlansStatus.Inactive;
+                subPlan.UpdateTime = DateTime.UtcNow;
+                await _unitOfWork.subscriptionPlansRepository.UpdateAsync(subPlan);
+                await _unitOfWork.SaveChangesAsync();
+                return new ServiceResult<string>
+                {
+                    IsSuccess = true,
+                    Message = "Subscription plan status changed to Inactive successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error changing subscription plan status: {ex.Message}");
+            }
+        }
     }
 }
