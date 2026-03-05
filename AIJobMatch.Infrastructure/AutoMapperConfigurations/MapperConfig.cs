@@ -61,7 +61,9 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
             CreateMap<Skill, SkillResponse>();
             CreateMap<WorkExperiences, WorkExResponse>();
             CreateMap<Education, EducationResponse>();
-
+            CreateMap<JobApplication, JobApplicationResponse>();
+            CreateMap<JobApplicationRequest, JobApplication>();
+            CreateMap<JobApplicationUpdateRequest, JobApplication>();
         }
     }
 }
