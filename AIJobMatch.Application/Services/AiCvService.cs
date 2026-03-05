@@ -156,7 +156,7 @@ namespace AIJobMatch.Application.Services
         }}
     ";
 
-            // 3. Đóng gói Body (Giống hệt hàm SuggestCvDataAsync)
+            
             var requestBody = new { contents = new[] { new { parts = new[] { new { text = prompt } } } } };
             var jsonContent = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
 

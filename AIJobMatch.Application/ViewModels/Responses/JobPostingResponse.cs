@@ -29,6 +29,7 @@ namespace AIJobMatch.Application.ViewModels.Responses
         public DateTime ExpiryDate { get; set; }
         public bool IsActive { get; set; }
         public int ViewCount { get; set; }
+        public bool isDeleted { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }
 

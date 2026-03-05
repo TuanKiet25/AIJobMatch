@@ -56,6 +56,7 @@ namespace AIJobMatch.Infrastructure
             services.AddScoped<ICVService, CVService>();
             services.AddScoped<IAiCvService, AiCvService>();
             services.AddScoped<IValidateService, ValidateService>();
+            services.AddScoped<IJobApplicationService, JobApplicationService>();
             #endregion
             //Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
