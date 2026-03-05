@@ -40,7 +40,8 @@ namespace AIJobMatch.Application.Services
                     Guid userId = Guid.Parse(userIdClaim);
                     var candidate = await _unitOfWork.userRepository.GetAsync(
                         filter: c => c.Id == userId,
-                        include: c => c.Include(a => a.UserSubscriptions).ThenInclude(p => p.SubscriptionPlans));
+                        include: c => c.Include(a => a.UserSubscriptions)
+                                       .ThenInclude(p => p.SubscriptionPlans));
                     if(candidate == null)
                     {
                         return "Can not find User";
