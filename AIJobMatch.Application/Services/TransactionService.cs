@@ -1,15 +1,18 @@
 using AIJobMatch.Application.IServices;
 using AIJobMatch.Application.ViewModels.Requests;
+using AIJobMatch.Application.ViewModels.Responses;
 using AIJobMatch.Domain.Entities;
 using AIJobMatch.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using PayOS;
+using PayOS.Exceptions;
 using PayOS.Models.V2.PaymentRequests;
 using PayOS.Models.Webhooks;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +30,50 @@ namespace AIJobMatch.Application.Services
             _unitOfWork = unitOfWork;
             _payOS = payOS;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public Task<ServiceResult<string>> ApplySubscription(Guid planId)
+        {
+            try
+            {
+                var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value
+                ?? _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    return Task.FromResult(new ServiceResult<string>
+                    {
+                        IsSuccess = false,
+                        Message = "Can not find this User",
+                        Data = "Subscription applied fail"
+                    });
+                }
+                else
+                {
+                    Guid userId = Guid.Parse(userIdClaim);
+                    var userSubscription = new UserSubscription
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = userId,
+                        PlanId = planId,
+                        Status = UserSubscriptionStatus.Active,
+                        CreateTime = DateTime.UtcNow,
+                        UpdateTime = DateTime.UtcNow,
+                        isDeleted = false
+                    };
+                    _unitOfWork.userSubsriptionRepository.AddAsync(userSubscription);
+                    _unitOfWork.SaveChangesAsync();
+                    return Task.FromResult(new ServiceResult<string>
+                    {
+                        IsSuccess = true,
+                        Message = "Subscription applied successfully",
+                        Data = "Subscription applied successfully"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error applying subscription: {ex.Message}", ex);
+            }
         }
 
         public async Task<string> CreatePayment(CreatePaymentRequest request)
