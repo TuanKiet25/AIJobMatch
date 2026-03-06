@@ -11,6 +11,7 @@ namespace AIJobMatch.Domain.Entities
     {
         public Guid UserId { get; set; }
         public Guid PlanId { get; set; }
+        public DateTime ExpirationDate { get; set; }
         public UserSubscriptionStatus Status { get; set; }
         public SubscriptionPlans? SubscriptionPlans { get; set; }
     }

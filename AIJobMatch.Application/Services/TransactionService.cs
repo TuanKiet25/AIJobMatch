@@ -32,7 +32,7 @@ namespace AIJobMatch.Application.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Task<ServiceResult<string>> ApplySubscription(Guid planId)
+        public async Task<ServiceResult<string>> ApplySubscription(Guid planId)
         {
             try
             {
@@ -40,35 +40,43 @@ namespace AIJobMatch.Application.Services
                 ?? _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim))
                 {
-                    return Task.FromResult(new ServiceResult<string>
+                    return new ServiceResult<string>
                     {
                         IsSuccess = false,
                         Message = "Can not find this User",
                         Data = "Subscription applied fail"
-                    });
+                    };
                 }
-                else
+                var subscriptionPlan = await _unitOfWork.subscriptionPlansRepository.GetByIdAsync(planId);
+                if (subscriptionPlan == null)
                 {
-                    Guid userId = Guid.Parse(userIdClaim);
+                    return new ServiceResult<string>
+                    {
+                        IsSuccess = false,
+                        Message = "Can not find this subscription plan",
+                        Data = "Subscription applied fail"
+                    };
+                }
+                Guid userId = Guid.Parse(userIdClaim);
                     var userSubscription = new UserSubscription
                     {
                         Id = Guid.NewGuid(),
                         UserId = userId,
                         PlanId = planId,
+                        ExpirationDate = DateTime.UtcNow.AddDays(subscriptionPlan.DurationInDays),
                         Status = UserSubscriptionStatus.Active,
                         CreateTime = DateTime.UtcNow,
                         UpdateTime = DateTime.UtcNow,
                         isDeleted = false
                     };
-                    _unitOfWork.userSubsriptionRepository.AddAsync(userSubscription);
-                    _unitOfWork.SaveChangesAsync();
-                    return Task.FromResult(new ServiceResult<string>
+                    await _unitOfWork.userSubsriptionRepository.AddAsync(userSubscription);
+                    await _unitOfWork.SaveChangesAsync();
+                    return new ServiceResult<string>
                     {
                         IsSuccess = true,
                         Message = "Subscription applied successfully",
                         Data = "Subscription applied successfully"
-                    });
-                }
+                    };
             }
             catch (Exception ex)
             {

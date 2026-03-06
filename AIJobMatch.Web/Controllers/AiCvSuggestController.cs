@@ -2,6 +2,7 @@
 using AIJobMatch.Application.Services;
 using AIJobMatch.Application.ViewModels.Requests;
 using AIJobMatch.Application.ViewModels.Responses;
+using AIJobMatch.Infrastructure.Filter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -20,6 +21,7 @@ namespace AIJobMatch.Web.Controllers
             _validateService = validateService;
         }   
         [HttpPost("suggest-cv")]
+        [PremiumDateCheck]
         public async Task<IActionResult> SuggestCv([FromBody] CVRequest cVRequest)
         {
             string checkResult = await _validateService.ValidateCandidateSubcription("Plus");
@@ -34,6 +36,7 @@ namespace AIJobMatch.Web.Controllers
             }
         }
         [HttpPost("suggest-cv-by-Id")]
+        [PremiumDateCheck]
         public async Task<IActionResult> SuggestCvById([FromBody] Guid id)
         {
             string checkResult = await _validateService.ValidateCandidateSubcription("Plus");
