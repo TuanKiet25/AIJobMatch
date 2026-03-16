@@ -32,7 +32,7 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
                 .ForMember(dest => dest.Transactions, opt => opt.Ignore());
             
             CreateMap<SubscriptionPlans, SubscriptionPlanResponse>();
-
+            CreateMap<UserSubscription, UserSubscriptionResponse>();
             CreateMap<Company, CompanyRegisterResponse>()
                 .ForMember(dest => dest.CreateTime, otp => otp.MapFrom(src => DateTime.UtcNow))
                 .ReverseMap();

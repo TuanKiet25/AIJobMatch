@@ -6,6 +6,8 @@ using AIJobMatch.Application.ViewModels.Responses;
 using AIJobMatch.Domain.Entities;
 using AIJobMatch.Domain.Enums;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +20,13 @@ namespace AIJobMatch.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SubscriptionPlanService(IUnitOfWork unitOfWork, IMapper mapper)
+        public SubscriptionPlanService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<SubscriptionPlanResponse> CreateAsync(SubscriptionPlanRequest request)
@@ -96,9 +100,9 @@ namespace AIJobMatch.Application.Services
                     throw new Exception("Active subscription plans cannot be updated.");
                 }
 
-                    // Check if another plan with same name exists (excluding current one)
-                    //sửa lại phần này vì khi không cho sửa tên luôn
-                    var existingPlan = await _unitOfWork.subscriptionPlansRepository.GetAsync(sp => sp.Name == request.Name && sp.Id != id && !sp.isDeleted);
+                // Check if another plan with same name exists (excluding current one)
+                //sửa lại phần này vì khi không cho sửa tên luôn
+                var existingPlan = await _unitOfWork.subscriptionPlansRepository.GetAsync(sp => sp.Name == request.Name && sp.Id != id && !sp.isDeleted);
                 if (existingPlan != null)
                 {
                     throw new Exception("Subscription plan with this name already exists.");
@@ -182,6 +186,40 @@ namespace AIJobMatch.Application.Services
             catch (Exception ex)
             {
                 throw new Exception($"Error changing subscription plan status: {ex.Message}");
+            }
+        }
+
+        public async Task<ServiceResult<List<UserSubscriptionResponse>>> GetSubcriptionPlanByUserAsync()
+        {
+            try
+            {
+                var UserIdString = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value;
+                if (string.IsNullOrEmpty(UserIdString) || !Guid.TryParse(UserIdString, out var userId))
+                {
+                    return new ServiceResult<List<UserSubscriptionResponse>>
+                    {
+                        Data = null,
+                        IsSuccess = false,
+                        Message = "Invalid  user ID from token"
+                    };
+                }
+
+                var userSubscriptions = await _unitOfWork.userSubsriptionRepository.GetAllAsync(us => !us.isDeleted && us.UserId == userId, include: u => u.Include(us => us.SubscriptionPlans));
+                var responses = _mapper.Map<List<UserSubscriptionResponse>>(userSubscriptions);
+                return new ServiceResult<List<UserSubscriptionResponse>>
+                {
+                    Data = responses,
+                    IsSuccess = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<List<UserSubscriptionResponse>>
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
             }
         }
     }
