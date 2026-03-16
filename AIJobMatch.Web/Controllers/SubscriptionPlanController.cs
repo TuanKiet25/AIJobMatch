@@ -10,7 +10,7 @@ namespace AIJobMatch.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class SubscriptionPlanController : ControllerBase
+    public class SubscriptionPlanController : MyBaseController
     {
         private readonly ISubscriptionPlanService _subscriptionPlanService;
 
@@ -162,6 +162,12 @@ namespace AIJobMatch.Web.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        [HttpGet("Get_Subcription_Plan_By_User")]
+        public async Task<IActionResult> GetSubcriptionPlanByUser()
+        {
+            var result = await _subscriptionPlanService.GetSubcriptionPlanByUserAsync();
+            return HandleResult(result);
         }
     }
 }
