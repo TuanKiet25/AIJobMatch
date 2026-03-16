@@ -96,12 +96,21 @@ namespace AIJobMatch.Infrastructure.Repositories
         {
 
             IQueryable<T> query = _db;
+            
+            // Apply include FIRST
             if (include != null)
             {
                 query = include(query);
             }
+            
+            // Then apply filter
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
 #pragma warning disable CS8603 // Possible null reference return.
-            return await query.FirstOrDefaultAsync(filter);
+            return await query.FirstOrDefaultAsync();
 #pragma warning restore CS8603 // Possible null reference return.
 
         }

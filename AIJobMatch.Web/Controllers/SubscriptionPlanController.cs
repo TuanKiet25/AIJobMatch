@@ -77,7 +77,7 @@ namespace AIJobMatch.Web.Controllers
         /// Create a new subscription plan
         /// </summary>
         [HttpPost("Create")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([FromBody] SubscriptionPlanRequest request)
         {
             try

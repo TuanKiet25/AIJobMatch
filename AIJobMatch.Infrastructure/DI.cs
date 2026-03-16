@@ -4,6 +4,7 @@ using AIJobMatch.Application.IServices;
 using AIJobMatch.Application.Services;
 using AIJobMatch.Application.ViewModels.Requests;
 using AIJobMatch.Domain.Entities;
+using AIJobMatch.Infrastructure.Filter;
 using AIJobMatch.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ namespace AIJobMatch.Infrastructure
                     sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
             });
 
+            services.AddScoped<PremiumCheckFilter>();
             // Đăng ký repositiries
             #region Repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -56,6 +58,7 @@ namespace AIJobMatch.Infrastructure
             services.AddScoped<ICVService, CVService>();
             services.AddScoped<IAiCvService, AiCvService>();
             services.AddScoped<IValidateService, ValidateService>();
+            services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             services.AddScoped<IJobApplicationService, JobApplicationService>();
             #endregion
             //Đăng ký auto mapper
