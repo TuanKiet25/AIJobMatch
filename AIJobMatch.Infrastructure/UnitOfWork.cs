@@ -29,8 +29,9 @@ namespace AIJobMatch.Infrastructure
         public IEducationRepository educationRepository { get; }
         public IWorkExperienceRepository workExperienceRepository { get; }
         public IJobApplicationRepository jobApplicationRepository { get; }
+        public IMockInterviewRepository mockInterviewRepository { get; }
+        public IMockInterviewDetailRepository mockInterviewDetailRepository { get; }
         public IUserSubsriptionRepository userSubsriptionRepository { get; }
-
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
@@ -50,7 +51,9 @@ namespace AIJobMatch.Infrastructure
             workExperienceRepository = new WorkExperienceRepository(_context);
             transactionRepository = new TransactionRepository(_context);
             jobApplicationRepository = new JobApplicationRepository(_context);
-             userSubsriptionRepository = new UserSubsriptionRepository(_context);
+            mockInterviewRepository = new MockInterviewRepository(_context);
+            mockInterviewDetailRepository = new MockInterviewDetailRepository(_context);
+            userSubsriptionRepository = new UserSubsriptionRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

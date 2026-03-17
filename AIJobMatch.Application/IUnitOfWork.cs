@@ -26,6 +26,8 @@ namespace AIJobMatch.Application
         IEducationRepository educationRepository { get; }
         IWorkExperienceRepository workExperienceRepository { get; }
         IJobApplicationRepository jobApplicationRepository { get; }
+        IMockInterviewRepository mockInterviewRepository { get; }
+        IMockInterviewDetailRepository mockInterviewDetailRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }

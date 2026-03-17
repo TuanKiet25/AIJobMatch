@@ -44,6 +44,8 @@ namespace AIJobMatch.Infrastructure
             services.AddScoped<IEducationRepository, EducationRepository>();
             services.AddScoped<IWorkExperienceRepository, WorkExperienceRepository>();
             services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+            services.AddScoped<IMockInterviewRepository, MockInterviewRepository>();
+            services.AddScoped<IMockInterviewDetailRepository, MockInterviewDetailRepository>();
             #endregion
             // Đăng ký services
             #region services
@@ -60,6 +62,7 @@ namespace AIJobMatch.Infrastructure
             services.AddScoped<IValidateService, ValidateService>();
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             services.AddScoped<IJobApplicationService, JobApplicationService>();
+            services.AddScoped<IMockInterviewService, MockInterviewService>();
             #endregion
             //Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

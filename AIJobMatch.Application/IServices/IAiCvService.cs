@@ -10,7 +10,8 @@ namespace AIJobMatch.Application.IServices
 {
     public interface IAiCvService
     {
-        public Task<ServiceResult<AiCvReviewResponse>> SuggestCvDataAsync(CVRequest cVRequest);
-        public Task<ServiceResult<AiCvReviewResponse>> SuggestCvDataByIdAsync(Guid id);
+        Task<ServiceResult<AiCvReviewResponse>> SuggestCvDataAsync(CVRequest cVRequest);
+        Task<ServiceResult<AiCvReviewResponse>> SuggestCvDataByIdAsync(Guid id);
+
     }
 }
