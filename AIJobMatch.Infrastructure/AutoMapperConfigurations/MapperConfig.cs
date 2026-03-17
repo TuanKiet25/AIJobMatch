@@ -64,6 +64,8 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
             CreateMap<JobApplication, JobApplicationResponse>();
             CreateMap<JobApplicationRequest, JobApplication>();
             CreateMap<JobApplicationUpdateRequest, JobApplication>();
+            CreateMap<MockInterview, MockInterviewResultResponse>();
+            CreateMap<MockInterviewDetail, MockInterviewDetailResultResponse>();
         }
     }
 }
