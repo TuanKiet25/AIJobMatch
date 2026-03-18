@@ -1,4 +1,5 @@
 using AIJobMatch.Application.IServices;
+using AIJobMatch.Application.Services;
 using AIJobMatch.Application.ViewModels.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,10 +12,12 @@ namespace AIJobMatch.Web.Controllers
     public class JobPostingController : ControllerBase
     {
         private readonly IJobPostingService _jobPostingService;
+        private readonly IValidateService _validateService;
 
-        public JobPostingController(IJobPostingService jobPostingService)
+        public JobPostingController(IJobPostingService jobPostingService, IValidateService validateService)
         {
             _jobPostingService = jobPostingService;
+            _validateService = validateService;
         }
 
         [HttpPost("create")]
@@ -23,10 +26,17 @@ namespace AIJobMatch.Web.Controllers
         {
             try
             {
-               
-
-                var result = await _jobPostingService.CreateJobPostingAsync(request);
-                return CreatedAtAction(nameof(GetJobPostingById), new { id = result.Id }, result);
+                string checkResult = await _validateService.ValidateCandidateSubcription("Plus");
+                if (checkResult == "Success")
+                {
+                    var result = await _jobPostingService.CreateJobPostingAsync(request);
+                    return CreatedAtAction(nameof(GetJobPostingById), new { id = result.Id }, result);
+                }
+                else
+                {
+                    return BadRequest(checkResult);
+                }
+                
             }
             catch (Exception ex)
             {
