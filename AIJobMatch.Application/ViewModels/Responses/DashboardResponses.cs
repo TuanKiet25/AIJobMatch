@@ -77,8 +77,8 @@ namespace AIJobMatch.Application.ViewModels.Responses
     public class RecentTransactionResponse
     {
         public Guid TransactionId { get; set; }
-        public string UserEmail { get; set; }
-        public string PlanName { get; set; }
+        public string UserId { get; set; }
+        public Guid PlanId { get; set; }
         public decimal Amount { get; set; }
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
