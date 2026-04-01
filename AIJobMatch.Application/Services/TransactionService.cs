@@ -47,6 +47,7 @@ namespace AIJobMatch.Application.Services
                         Data = "Subscription applied fail"
                     };
                 }
+                
                 var subscriptionPlan = await _unitOfWork.subscriptionPlansRepository.GetByIdAsync(planId);
                 if (subscriptionPlan == null)
                 {
@@ -57,26 +58,45 @@ namespace AIJobMatch.Application.Services
                         Data = "Subscription applied fail"
                     };
                 }
+
                 Guid userId = Guid.Parse(userIdClaim);
-                    var userSubscription = new UserSubscription
-                    {
-                        Id = Guid.NewGuid(),
-                        UserId = userId,
-                        PlanId = planId,
-                        ExpirationDate = DateTime.UtcNow.AddDays(subscriptionPlan.DurationInDays),
-                        Status = UserSubscriptionStatus.Active,
-                        CreateTime = DateTime.UtcNow,
-                        UpdateTime = DateTime.UtcNow,
-                        isDeleted = false
-                    };
-                    await _unitOfWork.userSubsriptionRepository.AddAsync(userSubscription);
-                    await _unitOfWork.SaveChangesAsync();
+                
+                var transaction = await _unitOfWork.transactionRepository
+                    .GetAsync(t => t.UserId == userId && t.PlanId == planId);
+                if (transaction == null)
+                {
                     return new ServiceResult<string>
                     {
-                        IsSuccess = true,
-                        Message = "Subscription applied successfully",
-                        Data = "Subscription applied successfully"
+                        IsSuccess = false,
+                        Message = "Transaction not found",
+                        Data = "Subscription applied fail"
                     };
+                }
+                transaction.TransactionStatus = TransactionStatus.Completed;
+                transaction.UpdateTime = DateTime.UtcNow;
+                await _unitOfWork.transactionRepository.UpdateAsync(transaction);
+
+                var userSubscription = new UserSubscription
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    PlanId = planId,
+                    ExpirationDate = DateTime.UtcNow.AddDays(subscriptionPlan.DurationInDays),
+                    Status = UserSubscriptionStatus.Active,
+                    CreateTime = DateTime.UtcNow,
+                    UpdateTime = DateTime.UtcNow,
+                    isDeleted = false
+                };
+                
+                await _unitOfWork.userSubsriptionRepository.AddAsync(userSubscription);
+                await _unitOfWork.SaveChangesAsync();
+                
+                return new ServiceResult<string>
+                {
+                    IsSuccess = true,
+                    Message = "Subscription applied successfully",
+                    Data = "Subscription applied successfully"
+                };
             }
             catch (Exception ex)
             {

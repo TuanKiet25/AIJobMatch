@@ -1,10 +1,12 @@
 using AIJobMatch.Application.IServices;
 using AIJobMatch.Application.ViewModels.Responses;
 using AIJobMatch.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +15,12 @@ namespace AIJobMatch.Application.Services
     public class AdminDashboardService : IAdminDashboardService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AdminDashboardService(IUnitOfWork unitOfWork)
+        public AdminDashboardService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<DashboardOverviewResponse> GetDashboardOverviewAsync()
@@ -189,14 +193,21 @@ namespace AIJobMatch.Application.Services
             var transactions = await _unitOfWork.transactionRepository.GetAllAsync(
                 filter: null);
 
+            var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value
+                ?? _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                userIdClaim = "UnknownUser";
+            }
+
             var recentTransactions = transactions
                 .OrderByDescending(t => t.CreateTime)
                 .Take(take)
                 .Select(t => new RecentTransactionResponse
                 {
                     TransactionId = t.Id,
-                    UserEmail = "User",
-                    PlanName = t.SubscriptionPlans?.Name ?? "Unknown",
+                    UserId = userIdClaim,
+                    PlanId = t.PlanId,
                     Amount = t.Amount,
                     Status = t.TransactionStatus.ToString(),
                     CreatedDate = t.CreateTime

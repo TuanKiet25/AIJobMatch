@@ -9,7 +9,7 @@ namespace AIJobMatch.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class SubscriptionPlanController : MyBaseController
     {
         private readonly ISubscriptionPlanService _subscriptionPlanService;
@@ -77,7 +77,7 @@ namespace AIJobMatch.Web.Controllers
         /// Create a new subscription plan
         /// </summary>
         [HttpPost("Create")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([FromBody] SubscriptionPlanRequest request)
         {
             try
