@@ -69,6 +69,7 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
             CreateMap<MockInterviewDetail, MockInterviewDetailResultResponse>();
             CreateMap<JobPostingDocument, JobSearchResponse>().ReverseMap();
             CreateMap<Address, AddressResponse>().ReverseMap();
+            CreateMap<UserSubscription, UserSubscriptionResponse>().ReverseMap();
         }
     }
 }
