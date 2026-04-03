@@ -12,6 +12,7 @@ namespace AIJobMatch.Application.ViewModels.Responses
     {
         public Guid UserId { get; set; }
         public Guid PlanId { get; set; }
+        public string? UserName { get; set; }
         public UserSubscriptionStatus Status { get; set; }
         public string? SubscriptionPlansName { get; set; }
         public Role SubscriptionPlansTargetRole { get; set; }
