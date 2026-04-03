@@ -29,7 +29,7 @@ namespace AIJobMatch.Infrastructure.Configurations
             
             // Configure relationship with UserSubscriptions
             builder.HasMany(a => a.UserSubscriptions)
-                   .WithOne()
+                   .WithOne(c => c.Account)
                    .HasForeignKey(us => us.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
             
