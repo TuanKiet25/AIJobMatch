@@ -6,26 +6,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AIJobMatch.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UserSubplanUpdate : Migration
+    public partial class UpdateUserSubplan : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<Guid>(
-                name: "AccountsId",
+                name: "AccountId",
                 table: "UserSubscriptions",
                 type: "uuid",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSubscriptions_AccountsId",
+                name: "IX_UserSubscriptions_AccountId",
                 table: "UserSubscriptions",
-                column: "AccountsId");
+                column: "AccountId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_UserSubscriptions_Accounts_AccountsId",
+                name: "FK_UserSubscriptions_Accounts_AccountId",
                 table: "UserSubscriptions",
-                column: "AccountsId",
+                column: "AccountId",
                 principalTable: "Accounts",
                 principalColumn: "Id");
         }
@@ -34,15 +34,15 @@ namespace AIJobMatch.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_UserSubscriptions_Accounts_AccountsId",
+                name: "FK_UserSubscriptions_Accounts_AccountId",
                 table: "UserSubscriptions");
 
             migrationBuilder.DropIndex(
-                name: "IX_UserSubscriptions_AccountsId",
+                name: "IX_UserSubscriptions_AccountId",
                 table: "UserSubscriptions");
 
             migrationBuilder.DropColumn(
-                name: "AccountsId",
+                name: "AccountId",
                 table: "UserSubscriptions");
         }
     }

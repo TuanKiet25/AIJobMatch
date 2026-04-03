@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AIJobMatch.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260403144041_UserSubplanUpdate")]
-    partial class UserSubplanUpdate
+    [Migration("20260403155437_UpdateUserSubplan")]
+    partial class UpdateUserSubplan
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -696,7 +696,7 @@ namespace AIJobMatch.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AccountsId")
+                    b.Property<Guid?>("AccountId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateTime")
@@ -722,7 +722,7 @@ namespace AIJobMatch.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountsId");
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("PlanId");
 
@@ -994,9 +994,9 @@ namespace AIJobMatch.Infrastructure.Migrations
 
             modelBuilder.Entity("AIJobMatch.Domain.Entities.UserSubscription", b =>
                 {
-                    b.HasOne("AIJobMatch.Domain.Entities.Account", "Accounts")
+                    b.HasOne("AIJobMatch.Domain.Entities.Account", "Account")
                         .WithMany()
-                        .HasForeignKey("AccountsId");
+                        .HasForeignKey("AccountId");
 
                     b.HasOne("AIJobMatch.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
                         .WithMany("UserSubscriptions")
@@ -1010,7 +1010,7 @@ namespace AIJobMatch.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Accounts");
+                    b.Navigation("Account");
 
                     b.Navigation("SubscriptionPlans");
                 });
