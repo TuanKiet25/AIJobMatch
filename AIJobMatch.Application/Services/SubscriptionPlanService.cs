@@ -188,7 +188,28 @@ namespace AIJobMatch.Application.Services
                 throw new Exception($"Error changing subscription plan status: {ex.Message}");
             }
         }
-
+        public async Task<ServiceResult<List<UserSubscriptionResponse>>> GetAllUserWithSubplanAsync()
+        {
+            try
+            {
+                var userSubscriptions = await _unitOfWork.userRepository.GetAllAsync(a => a.UserSubscriptions.Any(us => !us.isDeleted), include: u => u.Include(us => us.UserSubscriptions).ThenInclude(s => s.SubscriptionPlans));
+                var responses = _mapper.Map<List<UserSubscriptionResponse>>(userSubscriptions);
+                return new ServiceResult<List<UserSubscriptionResponse>>
+                {
+                    Data = responses,
+                    IsSuccess = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<List<UserSubscriptionResponse>>
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
         public async Task<ServiceResult<List<UserSubscriptionResponse>>> GetSubcriptionPlanByUserAsync()
         {
             try

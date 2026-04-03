@@ -18,5 +18,6 @@ namespace AIJobMatch.Application.IServices
         Task<bool> DeleteAsync(Guid id);
         Task<ServiceResult<string>> ChangeStatusToInactiveAsync(Guid id);
         Task<ServiceResult<List<UserSubscriptionResponse>>> GetSubcriptionPlanByUserAsync();
+        Task<ServiceResult<List<UserSubscriptionResponse>>> GetAllUserWithSubplanAsync();
     }
 }

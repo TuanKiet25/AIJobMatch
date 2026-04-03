@@ -171,5 +171,12 @@ namespace AIJobMatch.Web.Controllers
             var result = await _subscriptionPlanService.GetSubcriptionPlanByUserAsync();
             return HandleResult(result);
         }
+        [HttpGet("Get_All_User_With_Subplan")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllUserWithSubplan()
+        {
+            var result = await _subscriptionPlanService.GetAllUserWithSubplanAsync();
+            return HandleResult(result);
+        }
     }
 }
