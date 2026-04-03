@@ -194,7 +194,7 @@ namespace AIJobMatch.Application.Services
             {
                 var userSubscriptions = await _unitOfWork.userSubsriptionRepository.GetAllAsync(
                                             us => !us.isDeleted,
-                                            include: query => query.Include(us => us.SubscriptionPlans).Include(us => us.Accounts)
+                                            include: query => query.Include(us => us.SubscriptionPlans).Include(us => us.Account)
                                             );
                 var responses = _mapper.Map<List<UserSubscriptionResponse>>(userSubscriptions);
                 return new ServiceResult<List<UserSubscriptionResponse>>
@@ -228,7 +228,7 @@ namespace AIJobMatch.Application.Services
                     };
                 }
 
-                var userSubscriptions = await _unitOfWork.userSubsriptionRepository.GetAllAsync(us => !us.isDeleted && us.UserId == userId, include: u => u.Include(us => us.SubscriptionPlans).Include(us => us.Accounts));
+                var userSubscriptions = await _unitOfWork.userSubsriptionRepository.GetAllAsync(us => !us.isDeleted && us.UserId == userId, include: u => u.Include(us => us.SubscriptionPlans).Include(us => us.Account));
                 var responses = _mapper.Map<List<UserSubscriptionResponse>>(userSubscriptions);
                 return new ServiceResult<List<UserSubscriptionResponse>>
                 {
