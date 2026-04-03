@@ -1,9 +1,11 @@
-using AIJobMatch.Application.IServices;
+﻿using AIJobMatch.Application.IServices;
 using AIJobMatch.Application.ViewModels.Requests;
 using AIJobMatch.Application.ViewModels.Responses;
+using AIJobMatch.Domain.Documents;
 using AIJobMatch.Domain.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +19,15 @@ namespace AIJobMatch.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IElasticSearchService _elasticSearchService;
 
 
-        public JobPostingService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public JobPostingService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IElasticSearchService elasticSearchService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _elasticSearchService = elasticSearchService;
         }
 
         public async Task<JobPostingResponse> CreateJobPostingAsync(JobPostingRequest request)
@@ -59,7 +63,25 @@ namespace AIJobMatch.Application.Services
                         WardName = address.WardName
                     };
                 }
-                
+                try
+                {
+                    var jobDocument = new JobPostingDocument
+                    {
+                        Id = jobPosting.Id,
+                        Title = jobPosting.Title,
+                        YearsOfExperience = jobPosting.YearsOfExperience,
+                        Location = address != null ? address.CityName : "",
+                        Requirement = jobPosting.Requirement,
+                        IsActive = jobPosting.IsActive
+                    };
+
+                     await _elasticSearchService.IndexJobAsync(jobDocument);
+
+                }
+                catch (Exception ex)
+                {
+             
+                }
                 return response;
             }
             catch (Exception ex)
@@ -214,6 +236,56 @@ namespace AIJobMatch.Application.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ServiceResult<List<JobSearchResponse>>> SearchJobPostingsAsync(Guid CvId)
+        {
+            try
+            {
+                var candidateCv = await _unitOfWork.candidateProfileRepository.GetAsync(c => c.Id == CvId, 
+                    include: q => q.Include(c => c.Skills)
+                    .Include(c => c.Candidate)
+                    .ThenInclude(c => c.Account)
+                    .ThenInclude(c => c.Addresses));
+                if(candidateCv == null)
+                {
+                        return new ServiceResult<List<JobSearchResponse>>
+                        {
+                            IsSuccess = false,
+                            Message = "Candidate CV not found",
+                            Data = null
+                        };
+                }
+                List<string> skills = candidateCv.Skills != null && candidateCv.Skills.Any()
+                                     ? candidateCv.Skills.Select(s => s.SkillName).ToList()
+                                     : new List<string>();
+                var primaryAddress = candidateCv.Candidate?.Account?.Addresses?.FirstOrDefault();
+                int level = candidateCv.YearsOfExperience;
+                var jobSearchRequest = new JobSearchRequest
+                {
+                    candidateSkills = skills,
+                    candidateLocation = primaryAddress != null ? primaryAddress.CityName : "",
+                    candidateLevel = level
+                };
+
+                Console.WriteLine($"--- DEBUG DATA TRUYỀN VÀO ELASTIC ---");
+                Console.WriteLine($"Location của CV: '{jobSearchRequest.candidateLocation}'");
+                Console.WriteLine($"Kinh nghiệm của CV: {jobSearchRequest.candidateLevel} năm");
+                Console.WriteLine($"Số kỹ năng bóc được từ CV: {jobSearchRequest.candidateSkills.Count} skills");
+                Console.WriteLine($"-------------------------------------");
+                var recommendedJobDocs = await _elasticSearchService.RecommendJobsAsync(jobSearchRequest);
+                var responseData = _mapper.Map<List<JobSearchResponse>>(recommendedJobDocs);
+                return new ServiceResult<List<JobSearchResponse>>
+                {
+                    IsSuccess = true,
+                    Message = "Job search successful",
+                    Data = responseData
+                };
             }
             catch (Exception ex)
             {

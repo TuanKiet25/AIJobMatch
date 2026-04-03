@@ -16,5 +16,6 @@ namespace AIJobMatch.Application.IServices
         Task<List<JobPostingResponse>> GetJobPostingsByCompanyIdAsync(Guid companyId);
         Task<bool> UpdateJobPostingAsync(Guid id, JobPostingUpdateRequest request);
         Task<bool> DeleteJobPostingAsync(Guid id);
+        Task<ServiceResult<List<JobSearchResponse>>> SearchJobPostingsAsync(Guid CvId);
     }
 }

@@ -9,7 +9,7 @@ namespace AIJobMatch.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class JobPostingController : ControllerBase
+    public class JobPostingController : MyBaseController
     {
         private readonly IJobPostingService _jobPostingService;
         private readonly IValidateService _validateService;
@@ -158,6 +158,12 @@ namespace AIJobMatch.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        [HttpGet("Elastic-jobPosting-search/{cvId}")]
+        public async Task<IActionResult> SearchJobPostings(Guid cvId)
+        {
+                var result = await _jobPostingService.SearchJobPostingsAsync(cvId);
+                return HandleResult(result);
         }
     }
 }

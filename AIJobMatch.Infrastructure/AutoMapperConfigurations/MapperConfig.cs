@@ -1,5 +1,6 @@
 ﻿using AIJobMatch.Application.ViewModels.Requests;
 using AIJobMatch.Application.ViewModels.Responses;
+using AIJobMatch.Domain.Documents;
 using AIJobMatch.Domain.Entities;
 using AIJobMatch.Domain.Enums;
 using AutoMapper;
@@ -66,6 +67,8 @@ namespace AIJobMatch.Infrastructure.AutoMapperConfigurations
             CreateMap<JobApplicationUpdateRequest, JobApplication>();
             CreateMap<MockInterview, MockInterviewResultResponse>();
             CreateMap<MockInterviewDetail, MockInterviewDetailResultResponse>();
+            CreateMap<JobPostingDocument, JobSearchResponse>().ReverseMap();
+            CreateMap<Address, AddressResponse>().ReverseMap();
         }
     }
 }

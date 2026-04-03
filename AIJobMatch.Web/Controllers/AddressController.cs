@@ -7,7 +7,7 @@ namespace AIJobMatch.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AddressController : ControllerBase
+    public class AddressController : MyBaseController
     {
         private readonly IAddressService _addressService;
         public AddressController(IAddressService addressService)
@@ -26,7 +26,7 @@ namespace AIJobMatch.Web.Controllers
             {
                 return NotFound("No city found !!!");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -39,14 +39,14 @@ namespace AIJobMatch.Web.Controllers
                 var result = await _addressService.GetAllDistrictByCityCodeAsync(cityCode);
                 return Ok(result);
             }
-            catch(KeyNotFoundException)
+            catch (KeyNotFoundException)
             {
                 return NotFound("No district found !!!");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-            }   
+            }
 
         }
         [HttpGet("ward-name/{districtCode}")]
@@ -65,6 +65,12 @@ namespace AIJobMatch.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        [HttpPost("update-user-address")]
+        public async Task<IActionResult> UpdateUserAddress(Guid userID,string cityCode, string districtCode, string wardCode, string? street)
+        {
+            var result = await _addressService.UpdateUserAddressAsync(userID, cityCode, districtCode, wardCode, street);
+            return HandleResult(result);
         }
     }
 }

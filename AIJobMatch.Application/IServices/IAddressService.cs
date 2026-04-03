@@ -12,5 +12,6 @@ namespace AIJobMatch.Application.IServices
         public Task<List<CityReponse>> GetAllCityAsync();
         public Task<List<DistrictResponse>> GetAllDistrictByCityCodeAsync(string cityCode);
         public Task<List<WardResponse>> GetAllWardByDistrictCodeAsync(string districtCode);
+        public Task<ServiceResult<AddressResponse>> UpdateUserAddressAsync(Guid userId, string cityCode, string districtCode, string wardCode, string? street);
     }
 }

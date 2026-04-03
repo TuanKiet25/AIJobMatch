@@ -163,7 +163,9 @@ namespace AIJobMatch.Web.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
         [HttpGet("Get_Subcription_Plan_By_User")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetSubcriptionPlanByUser()
         {
             var result = await _subscriptionPlanService.GetSubcriptionPlanByUserAsync();
