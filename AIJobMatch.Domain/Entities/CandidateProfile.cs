@@ -11,6 +11,7 @@ namespace AIJobMatch.Domain.Entities
         public string? Template { get; set; }
         public string? FullName { get; set; }
         public string? Jobtitle { get; set; }
+        public int YearsOfExperience { get; set; }
         public string? AboutMe { get; set; }
         public string? PortfolioUrl { get; set; }
         public string? AvatarUrl { get; set; }

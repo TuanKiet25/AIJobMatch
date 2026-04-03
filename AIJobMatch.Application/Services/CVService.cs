@@ -266,6 +266,7 @@ namespace AIJobMatch.Application.Services
                 cv.DesiredJobTitle = cvRequest.DesiredJobTitle;
                 cv.WorkLocation = cvRequest.WorkLocation;
                 cv.JobType = cvRequest.JobType;
+                cv.YearsOfExperience = cvRequest.YearsOfExperience;
                 cv.Achievements = cvRequest.Achievements;
                 cv.Contacts = cvRequest.Contacts;
                 cv.UpdateTime = DateTime.UtcNow;

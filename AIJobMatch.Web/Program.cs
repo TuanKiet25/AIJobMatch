@@ -3,6 +3,7 @@ using AIJobMatch.Application.Services;
 using AIJobMatch.Application.ViewModels.Requests;
 using AIJobMatch.Infrastructure;
 using AIJobMatch.Infrastructure.Data;
+using Elastic.Clients.Elasticsearch;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -79,7 +80,42 @@ builder.Services.AddAuthorization();
 builder.Services.Configure<TurnstileSettings>(builder.Configuration.GetSection("TurnstileSettings"));
 
 var app = builder.Build();
+//testconection elasticsearch
+using (var scope = app.Services.CreateScope())
+{
+    // 1. Gọi đúng kiểu dữ liệu ElasticsearchClient của v8
+    var elasticClient = scope.ServiceProvider.GetRequiredService<ElasticsearchClient>();
 
+    // 2. Trong v8, hàm Ping trả về một đối tượng khác, ta dùng IsValidResponse
+    var pingResponse = elasticClient.Ping();
+
+    Console.WriteLine("\n=======================================");
+
+    // 3. Kiểm tra IsValidResponse thay vì IsValid
+    if (pingResponse.IsValidResponse)
+    {
+        Console.WriteLine("✅ KẾT NỐI ELASTICSEARCH V8 THÀNH CÔNG!");
+
+        // 4. Cách lấy URL trong v8 có chút thay đổi qua Elasticstack settings
+        // Nếu dòng dưới này quá dài, bạn có thể bỏ qua vì ta chỉ cần biết nó Success là đủ
+        Console.WriteLine("✅ Trạng thái: Server đang phản hồi tốt.");
+    }
+    else
+    {
+        Console.WriteLine("❌ LỖI KẾT NỐI ELASTICSEARCH V8!");
+
+        // 5. Lấy thông tin lỗi từ ElasticServerError hoặc DebugInformation
+        if (pingResponse.ElasticsearchServerError != null)
+        {
+            Console.WriteLine($"❌ Chi tiết: {pingResponse.ElasticsearchServerError.Error.Reason}");
+        }
+        else
+        {
+            Console.WriteLine($"❌ Debug: {pingResponse.DebugInformation}");
+        }
+    }
+    Console.WriteLine("=======================================\n");
+}
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

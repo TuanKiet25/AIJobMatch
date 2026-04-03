@@ -6,6 +6,9 @@ using AIJobMatch.Application.ViewModels.Requests;
 using AIJobMatch.Domain.Entities;
 using AIJobMatch.Infrastructure.Filter;
 using AIJobMatch.Infrastructure.Repositories;
+using AIJobMatch.Infrastructure.Services;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -63,6 +66,7 @@ namespace AIJobMatch.Infrastructure
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             services.AddScoped<IJobApplicationService, JobApplicationService>();
             services.AddScoped<IMockInterviewService, MockInterviewService>();
+            services.AddScoped<IElasticSearchService, ElasticSearchService>();
             #endregion
             //Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -88,6 +92,19 @@ namespace AIJobMatch.Infrastructure
             });
             //đăng ký HttpContextAccessor
             services.AddHttpContextAccessor();
+            //đăng ký ElasticSearch
+            var elasticUrl = configuration["ElasticSearch:Url"];
+            var username = configuration["ElasticSearch:Username"];
+            var password = configuration["ElasticSearch:Password"];
+            var settings = new ElasticsearchClientSettings(new Uri(elasticUrl))
+             .Authentication(new BasicAuthentication(username, password))
+             .ServerCertificateValidationCallback(CertificateValidations.AllowAll)
+             .DefaultIndex("job_postings");
+            //        var settings = new ElasticsearchClientSettings(new Uri("http://localhost:9200"))
+            //.       DefaultIndex("job_postings"); 
+
+            var elasticClient = new ElasticsearchClient(settings);
+            services.AddSingleton(elasticClient);
             return services;
         }
     }

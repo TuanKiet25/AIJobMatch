@@ -22,6 +22,7 @@ namespace AIJobMatch.Application.ViewModels.Responses
         public string? JobType { get; set; }
         public string? Achievements { get; set; }
         public string? Contacts { get; set; }
+        public int YearsOfExperience { get; set; }
         public bool IsActive { get; set; }
         public bool isDeleted { get; set; }
         public Guid CandidateId { get; set; }
