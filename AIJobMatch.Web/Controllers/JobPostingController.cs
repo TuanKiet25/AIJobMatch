@@ -26,7 +26,7 @@ namespace AIJobMatch.Web.Controllers
         {
             try
             {
-                string checkResult = await _validateService.ValidateCandidateSubcription("Plus");
+                string checkResult = await _validateService.ValidateCandidateSubcription("Premium");
                 if (checkResult == "Success")
                 {
                     var result = await _jobPostingService.CreateJobPostingAsync(request);
