@@ -36,14 +36,14 @@ namespace AIJobMatch.Web.Controllers
             }
         }
         [HttpPost("suggest-cv-by-Id")]
-        [PremiumDateCheck]
+        //[PremiumDateCheck]
         public async Task<IActionResult> SuggestCvById([FromBody] Guid id)
         {
             string checkResult = await _validateService.ValidateCandidateSubcription("Plus");
             if (checkResult == "Success")
             {
                 var result = await _aiCvService.SuggestCvDataByIdAsync(id);
-                return HandleResult(result);
+            return HandleResult(result);
             }
             else
             {
