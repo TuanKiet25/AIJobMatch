@@ -79,6 +79,15 @@ namespace AIJobMatch.Application.Services
                             {
                                 return errMessage;
                             }
+                        case "Premium":
+                            if(planName.ToLower().Equals(planName.ToLower()))
+                            {
+                                return successMessage;
+                            }
+                            else
+                            {
+                                return errMessage;
+                            }
                         default:
                             return errMessage;
                     }
