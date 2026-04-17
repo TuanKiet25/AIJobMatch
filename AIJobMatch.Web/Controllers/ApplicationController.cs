@@ -58,6 +58,12 @@ namespace AIJobMatch.Web.Controllers
             var result = await _jobApplicationService.UpdateJobApplicationStatusAsync(id, status);
             return HandleResult(result);
         }
+        [HttpPost("analyze-ai-result/{id}")]
+        public async Task<IActionResult> AnalyzeAndSaveAiResult(Guid id)
+        {
+            var result = await _jobApplicationService.AnalyzeAndSaveAiResultAsync(id);
+            return HandleResult(result);
 
+        }
     }
 }

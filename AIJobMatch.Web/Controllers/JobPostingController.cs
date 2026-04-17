@@ -30,13 +30,13 @@ namespace AIJobMatch.Web.Controllers
                 if (checkResult == "Success")
                 {
                     var result = await _jobPostingService.CreateJobPostingAsync(request);
-                    return CreatedAtAction(nameof(GetJobPostingById), new { id = result.Id }, result);
+                return CreatedAtAction(nameof(GetJobPostingById), new { id = result.Id }, result);
                 }
                 else
                 {
                     return BadRequest(checkResult);
                 }
-                
+
             }
             catch (Exception ex)
             {

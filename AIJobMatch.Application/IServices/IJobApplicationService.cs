@@ -18,6 +18,7 @@ namespace AIJobMatch.Application.IServices
         public Task<ServiceResult<JobApplicationResponse>> UpdateJobApplicationAsync(Guid id, JobApplicationUpdateRequest request);
         public Task<ServiceResult<string>> DeleteJobApplicationAsync(Guid id);
         public Task<ServiceResult<string>> UpdateJobApplicationStatusAsync(Guid id, JobApplicationStatus status);
+        public Task<ServiceResult<bool>> AnalyzeAndSaveAiResultAsync(Guid jobApplicationId);
 
     }
 }
